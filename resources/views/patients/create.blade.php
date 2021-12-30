@@ -7,10 +7,10 @@
   <div class="card-header border-0">
     <div class="row align-items-center">
       <div class="col">
-        <h3 class="mb-0">Nuevo doctor</h3>
+        <h3 class="mb-0">Nuevo paciente</h3>
       </div>
       <div class="col text-right">
-         <a href="{{ url('doctors')}}" class="btn btn-sm btn-default">Cancelar y volver</a>
+         <a href="{{ url('patients')}}" class="btn btn-sm btn-default">Cancelar y volver</a>
       </div>
     </div>
   </div>
@@ -22,23 +22,19 @@
         @endforeach
       </ul>
     @endif
-    <form action="{{ url('doctors')}}" method="post">
+    <form action="{{ url('patients')}}" method="post">
       @csrf
       <div class="form-group">
-        <label for="name">Nombre del médico</label>
+        <label for="name">Nombre del paciente</label>
         <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" id="email" name="email" class="form-control" value="{{ old('email') }}">
+        <input type="text" id="email" name="email" class="form-control" value="{{ old('email') }}" required>
       </div>
       <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="text" id="password" name="password" class="form-control" value="{{ Str::random(6) }}">
-      </div>
-      <div class="form-group">
-        <label for="identity_card">Identificación</label>
-        <input type="text" id="identity_card" name="identity_card" class="form-control" value="{{ old('identity_card') }}">
+        <label for="indentity_card">Identificación</label>
+        <input type="text" id="indentity_card" name="indentity_card" class="form-control" value="{{ old('indentity_card') }}">
       </div>
       <div class="form-group">
         <label for="phone">Teléfono / Móvil</label>
