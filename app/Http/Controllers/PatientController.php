@@ -44,7 +44,24 @@ class PatientController extends Controller
    */
   public function store(Request $request)
   {
-      //
+    //dd($request);
+    $rules = [
+       'name'          => 'required|min:3',
+       'email'         => 'required|email',
+       'identity_card' => 'nullable|digits:8',
+       'address'       => 'nullable|min:5',
+       'phone'         => 'nullable|min:10'
+    ];
+    $this->validate($request, $rules);
+    User::create(
+      $request->only('name', 'email', 'identity_card', 'address', 'phone') +
+         [
+            'role'     => 'patient',
+            'password' => bcrypt($request->input('password') )
+         ]
+    );
+    $notification = 'Datos del paciente registrados correctamente';
+    return redirect('/patients')->with( compact('notification'));
   }
 
   /**
@@ -66,7 +83,8 @@ class PatientController extends Controller
    */
   public function edit($id)
   {
-      //
+    $patient = User::patients()->findOrFail($id);
+    return view('patients.edit', compact('patient'));
   }
 
   /**
@@ -78,7 +96,26 @@ class PatientController extends Controller
    */
   public function update(Request $request, $id)
   {
-      //
+    //dd($request);
+    $rules = [
+       'name'          => 'required|min:3',
+       'email'         => 'required|email',
+       'identity_card' => 'nullable|digits:8',
+       'address'       => 'nullable|min:5',
+       'phone'         => 'nullable|min:10'
+    ];
+    $this->validate($request, $rules);
+
+    $patient = User::patients()->findOrFail($id);
+    $data = $request->only('name', 'email', 'identity_card', 'address', 'phone');
+    $password = $request->input('password');
+    if ($password) 
+        $data+= [ 'password' => bcrypt( $password ) ]; // Own Try this one
+    // $data['password'] = bcrypt( $password ); // video
+    $patient->fill( $data );
+    $patient->save();
+    $notification = '¡La información del paciente: '.$patient->name.' se actualizó correctamente!';
+    return redirect ('/patients')->with(compact('notification'));
   }
 
   /**
@@ -89,6 +126,10 @@ class PatientController extends Controller
    */
   public function destroy($id)
   {
-      //
+    $patient = User::patients()->findOrFail($id);
+    $patientName = $patient->name;
+    $patient->delete();
+    $notification = "¡La información del paciente: $patientName se ha eliminado con éxito!";
+    return redirect ('/patients')->with(compact('notification'));
   }
 }
