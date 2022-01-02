@@ -1,27 +1,10 @@
-@extends('layouts.panel')
+@extends('layouts.list')
 
-@section('module', 'PANEL DE ADMINISTRACIÓN')
+@section('title', 'Médicos')
 
-@section('content')
-<div class="card shadow">
-  <div class="card-header border-0">
-    <div class="row align-items-center">
-      <div class="col">
-        <h3 class="mb-0">Doctores</h3>
-      </div>
-      <div class="col text-right">
-         <a href="{{ url('doctors/create')}}" class="btn btn-sm btn-success">Nuevo doctor</a>
-      </div>
-    </div>
-  </div>
-  <div class="card-body">
-    @if( session('notification') )
-    <div class="alert alert-success" role="alert">
-      {{ session('notification') }}
-    </div>
-    @endif
-  </div>
-  <div class="table-responsive"> <!-- Specialities table -->
+@section('createRoute', url('doctors/create') )
+@section('createText', 'Nuevo médico')
+@section('tableData')
     <table class="table align-items-center table-flush">
       <thead class="thead-light">
         <tr>
@@ -55,6 +38,4 @@
         @endforeach
       </tbody>
     </table>
-  </div>
-</div>
 @endsection

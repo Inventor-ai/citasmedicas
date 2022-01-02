@@ -10,7 +10,6 @@
         <h3 class="mb-0">@yield('userAction')</h3>
       </div>
       <div class="col text-right">
-        
          <a href="@yield('routeCancel')" class="btn btn-sm btn-default">Cancelar y volver</a>
       </div>
     </div>
