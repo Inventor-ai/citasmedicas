@@ -21,8 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-// Speciality
-// return views
+// Speciality - return views
 Route::get('/specialties', 'SpecialtyController@index');
 Route::get('/specialties/create', 'SpecialtyController@create');          // Register form
 Route::get('/specialties/{specialty}/edit', 'SpecialtyController@edit');  // Edit form filled with data
@@ -33,6 +32,9 @@ Route::delete('/specialties/{specialty}', 'SpecialtyController@destroy');     //
 
 // Doctor
 Route::resource('doctors', 'DoctorController');
+
+// Doctor Plus
+Route::resource('doctorsPlus', 'DoctorsController');
 
 // Patient
 Route::resource('patients', 'PatientController');

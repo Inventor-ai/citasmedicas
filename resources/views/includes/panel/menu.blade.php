@@ -17,6 +17,11 @@
     </a>
   </li>
   <li class="nav-item">
+    <a class="nav-link" href="{{url('/doctorsPlus')}}">
+      <i class="ni ni-single-02 text-orange"></i> Médicos+
+    </a>
+  </li>
+  <li class="nav-item">
     <a class="nav-link" href="{{url('/patients')}}">
       <i class="ni ni-satisfied text-info"></i> Pacientes
     </a>

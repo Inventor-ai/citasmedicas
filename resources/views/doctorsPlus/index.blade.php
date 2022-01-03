@@ -1,9 +1,9 @@
 @extends('layouts.list')
 <?php
-  $mainTitle = 'Pacientes';
-  $mainItem  = 'paciente';
-  $mainRoute = 'patients';
-  $mainData  = $patients;
+  $mainTitle = 'Médicos+';
+  $mainItem  = 'médico+';
+  $mainRoute = 'doctorsPlus';
+  $mainData  = $doctors;
 ?>
 @section('title', "$mainTitle")
 @section('createText', "Nuevo $mainItem")
@@ -19,22 +19,22 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($patients as $patient)
+        @foreach ($doctors as $doctor)
         <tr>
           <th scope="row">
-            {{ $patient ->name }}
+            {{ $doctor ->name }}
           </th>
           <td>
-            {{ $patient ->email }}
+            {{ $doctor ->email }}
           </td>
           <td>
-            {{ $patient ->identity_card }}
+            {{ $doctor ->identity_card }}
           </td>
           <td>
-            <form method="POST" action="{{url("/$mainRoute/$patient->id")}}">
+            <form method="POST" action="{{url("/$mainRoute/$doctor->id")}}">
               @csrf
               @method('DELETE')
-              <a href="{{url("/$mainRoute/$patient->id/edit")}}" class="btn btn-sm btn-primary">Editar</a>
+              <a href="{{url("/$mainRoute/$doctor->id/edit")}}" class="btn btn-sm btn-primary">Editar</a>
               <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
             </form>
           </td>

@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 
-class PatientController extends Controller
+class DoctorsController extends Controller
 {
-  private $mainItem  = 'paciente';
-  private $mainRoute = 'patients';
+  private $mainItem  = 'médico';
+  private $mainRoute = 'doctorsPlus';
 
   public function __construct()
   {
@@ -22,12 +22,12 @@ class PatientController extends Controller
    */
   public function index()
   {
-    // $patients = User::all();
-    // $patients = User::where('role', 'patient')->get(); // Modelo sin Scope
-    // $patients = User::Patients()->get();               // Modelo con Scope. También funciona
-    // $patients = User::patients()->get();                  // Modelo con Scope (Video)
-    $patients = User::patients()->paginate(5);                  // Modelo con Scope (Video)
-    return view("$this->mainRoute.index", compact('patients') );
+    // $doctors = User::all();
+    // $doctors = User::where('role', 'doctor')->get(); // Modelo sin scope
+    // $doctors = User::Doctors()->get();               // Modelo con Scope. También funciona
+    // $doctors = User::doctors()->get();                  // Modelo con Scope (Video)
+    $doctors = User::doctors()->paginate(5);                  // Modelo con Scope (Video)
+    return view("$this->mainRoute.index", compact('doctors') );
   }
 
   /**
@@ -48,20 +48,19 @@ class PatientController extends Controller
    */
   public function store(Request $request)
   {
-    //dd($request);
     $rules = [
        'name'          => 'required|min:3',
        'email'         => 'required|email',
        'identity_card' => 'nullable|digits:8',
        'address'       => 'nullable|min:5',
-       'phone'         => 'nullable|min:10'
+       'phone'         => 'nullable|min:10'  // Video: min:6
     ];
     $this->validate($request, $rules);
     // Mass Assignment
     User::create(
       $request->only('name', 'email', 'identity_card', 'address', 'phone') +
          [
-            'role'     => 'patient',
+            'role'     => 'doctor',
             'password' => bcrypt( $request->input('password') )
          ]
     );
@@ -86,14 +85,10 @@ class PatientController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit(User $patient)  // Video - Ok
+  public function edit($id)
   {
-    return view("$this->mainRoute.edit", compact('patient'));
-  }
-  public function edit_Ok($id)         // Own - Ok
-  {
-    $patient = User::patients()->findOrFail($id);
-    return view("$this->mainRoute.edit", compact('patient'));
+    $doctor = User::doctors()->findOrFail($id);
+    return view("$this->mainRoute.edit", compact('doctor'));
   }
 
   /**
@@ -105,29 +100,25 @@ class PatientController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //dd($request);
     $rules = [
        'name'          => 'required|min:3',
        'email'         => 'required|email',
        'identity_card' => 'nullable|digits:8',
        'address'       => 'nullable|min:5',
-       'phone'         => 'nullable|min:10'
+       'phone'         => 'nullable|min:10'  // Video: min:6
     ];
     $this->validate($request, $rules);
-
-    $patient  = User::patients()->findOrFail($id);
+      
+    $doctor   = User::doctors()->findOrFail($id);
     $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
     $password = $request->input('password');
-    if ($password) 
-        $data+= [ 'password' => bcrypt( $password ) ]; // Own Ok
-    //  $data['password'] = bcrypt( $password ); // video Ok
-    $patient->fill( $data );
-    $patient->save();
-    $notification = "Datos del $this->mainItem ".$request->input('name').' registrados correctamente';
-    // $notification = "Datos del $this->mainItem ".$patient->name.' registrados correctamente';
-    // $notification = '¡La información del paciente: '.$patient->name.' se actualizó correctamente!';
-    // return redirect ('/patients')->with(compact('notification'));
-    return redirect("/$this->mainRoute")->with(compact('notification'));
+    if ($password)
+        $data['password'] = bcrypt( $password );          // video
+        // $data+= [ 'password' => bcrypt( $password ) ]; // Own Try this one
+    $doctor->fill( $data );
+    $doctor->save();
+    $notification = '¡La información del médico: '.$doctor->name.' se actualizó correctamente!';
+    return redirect("/$this->mainRoute")->with(compact('notification'));    
   }
 
   /**
@@ -136,21 +127,25 @@ class PatientController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy(User $patient)
+  public function destroy($id)
   {
-    // $patient      = User::patients()->findOrFail($id);
-    dd($patient);
-    $name         = $patient->name;
-    $patient->delete();
+    $doctor       = User::doctors()->findOrFail($id);
+    // dd($doctor);
+    $name         = $doctor->name;
+    $doctor->delete();
+    // $notification = "¡Los datos del médico: $doctorName se han eliminado con éxito!";
     $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";
     return redirect("/$this->mainRoute")->with(compact('notification'));
   }
-  public function destroy_ok($id)    // Own Ok
-  {
-    $patient      = User::patients()->findOrFail($id);
-    $name         = $patient->name;
-    $patient->delete();
-    $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";
-    return redirect("/$this->mainRoute")->with(compact('notification'));
-  }
+    // Es igual que en DoctorController.php y PatientController.php pero no funciona. 
+    // ¡¡¡No borra el registro!!!
+    // Porque no se conecta a la DB y por ende no encuentra tabla/registro
+    public function destroy_Fail(User $doctor)
+    {
+      dd($doctor);
+      $doctorName = $doctor->name;
+      $doctor->delete();
+      $notification = "¡Los datos del médico: $doctorName se han eliminado con éxito!";
+      return redirect("/$this->mainRoute")->with(compact('notification'));
+    }
 }
