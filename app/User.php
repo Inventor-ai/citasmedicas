@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $query->where('role', 'doctor');
     }
+
+    public function scopeUsers($query)
+    {
+        return $query->where('role', 'like', '%');
+    }
 }

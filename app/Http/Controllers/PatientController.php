@@ -40,6 +40,18 @@ class PatientController extends Controller
     return view("$this->mainRoute.create");
   }
 
+  private function verificar($request)
+  {
+    $rules = [
+       'name'          => 'required|min:3',
+       'email'         => 'required|email',
+       'identity_card' => 'nullable|digits:8',
+       'address'       => 'nullable|min:5',
+       'phone'         => 'nullable|min:10'  // Video: min:6
+    ];
+    $this->validate($request, $rules);
+  }
+
   /**
    * Store a newly created resource in storage.
    *
@@ -49,14 +61,15 @@ class PatientController extends Controller
   public function store(Request $request)
   {
     //dd($request);
-    $rules = [
-       'name'          => 'required|min:3',
-       'email'         => 'required|email',
-       'identity_card' => 'nullable|digits:8',
-       'address'       => 'nullable|min:5',
-       'phone'         => 'nullable|min:10'
-    ];
-    $this->validate($request, $rules);
+    // $rules = [
+    //    'name'          => 'required|min:3',
+    //    'email'         => 'required|email',
+    //    'identity_card' => 'nullable|digits:8',
+    //    'address'       => 'nullable|min:5',
+    //    'phone'         => 'nullable|min:10'
+    // ];
+    // $this->validate($request, $rules);
+    $this->verificar($request);  // Replaces upper validation call
     // Mass Assignment
     User::create(
       $request->only('name', 'email', 'identity_card', 'address', 'phone') +
@@ -106,28 +119,27 @@ class PatientController extends Controller
   public function update(Request $request, $id)
   {
     //dd($request);
-    $rules = [
-       'name'          => 'required|min:3',
-       'email'         => 'required|email',
-       'identity_card' => 'nullable|digits:8',
-       'address'       => 'nullable|min:5',
-       'phone'         => 'nullable|min:10'
-    ];
-    $this->validate($request, $rules);
-
+    // $rules = [
+    //    'name'          => 'required|min:3',
+    //    'email'         => 'required|email',
+    //    'identity_card' => 'nullable|digits:8',
+    //    'address'       => 'nullable|min:5',
+    //    'phone'         => 'nullable|min:10'
+    // ];
+    // $this->validate($request, $rules);
+    $this->verificar($request);  // Replaces upper validation call
     $patient  = User::patients()->findOrFail($id);
     $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
     $password = $request->input('password');
     if ($password) 
         $data+= [ 'password' => bcrypt( $password ) ]; // Own Ok
-    //  $data['password'] = bcrypt( $password ); // video Ok
+    //  $data['password'] = bcrypt( $password );       // video Ok
     $patient->fill( $data );
     $patient->save();
     $notification = "Datos del $this->mainItem ".$request->input('name').' registrados correctamente';
     // $notification = "Datos del $this->mainItem ".$patient->name.' registrados correctamente';
     // $notification = '¡La información del paciente: '.$patient->name.' se actualizó correctamente!';
-    // return redirect ('/patients')->with(compact('notification'));
-    return redirect("/$this->mainRoute")->with(compact('notification'));
+    return redirect("/$this->mainRoute")->with( compact('notification') );
   }
 
   /**
@@ -138,8 +150,7 @@ class PatientController extends Controller
    */
   public function destroy(User $patient)
   {
-    // $patient      = User::patients()->findOrFail($id);
-    dd($patient);
+    // dd($patient);
     $name         = $patient->name;
     $patient->delete();
     $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";

@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 
-class DoctorsController extends Controller
+
+class DoctoresController extends Controller
 {
   private $mainItem  = 'médico';
-  private $mainRoute = 'doctorsPlus';
+  private $mainRoute = 'doctores';
 
   public function __construct()
   {
@@ -25,8 +26,8 @@ class DoctorsController extends Controller
     // $doctors = User::all();
     // $doctors = User::where('role', 'doctor')->get(); // Modelo sin scope
     // $doctors = User::Doctors()->get();               // Modelo con Scope. También funciona
-    // $doctors = User::doctors()->get();                  // Modelo con Scope (Video)
-    $doctors = User::doctors()->paginate(5);                  // Modelo con Scope (Video)
+    // $doctors = User::doctors()->get();               // Modelo con Scope (Video)
+    $doctors = User::doctors()->paginate(5);            // Paginación
     return view("$this->mainRoute.index", compact('doctors') );
   }
 
@@ -40,13 +41,7 @@ class DoctorsController extends Controller
     return view("$this->mainRoute.create");
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
-  public function store(Request $request)
+  private function verificar($request)
   {
     $rules = [
        'name'          => 'required|min:3',
@@ -56,6 +51,25 @@ class DoctorsController extends Controller
        'phone'         => 'nullable|min:10'  // Video: min:6
     ];
     $this->validate($request, $rules);
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(Request $request)
+  {
+    // $rules = [
+    //    'name'          => 'required|min:3',
+    //    'email'         => 'required|email',
+    //    'identity_card' => 'nullable|digits:8',
+    //    'address'       => 'nullable|min:5',
+    //    'phone'         => 'nullable|min:10'  // Video: min:6
+    // ];
+    // $this->validate($request, $rules);
+    $this->verificar($request);  // Replaces upper validation call
     // Mass Assignment
     User::create(
       $request->only('name', 'email', 'identity_card', 'address', 'phone') +
@@ -85,7 +99,11 @@ class DoctorsController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit($id)
+  public function edit(User $doctore)
+  {
+    return view("$this->mainRoute.edit", compact('doctore'));
+  }
+  public function edit_own($id)
   {
     $doctor = User::doctors()->findOrFail($id);
     return view("$this->mainRoute.edit", compact('doctor'));
@@ -100,15 +118,15 @@ class DoctorsController extends Controller
    */
   public function update(Request $request, $id)
   {
-    $rules = [
-       'name'          => 'required|min:3',
-       'email'         => 'required|email',
-       'identity_card' => 'nullable|digits:8',
-       'address'       => 'nullable|min:5',
-       'phone'         => 'nullable|min:10'  // Video: min:6
-    ];
-    $this->validate($request, $rules);
-      
+    // $rules = [
+    //    'name'          => 'required|min:3',
+    //    'email'         => 'required|email',
+    //    'identity_card' => 'nullable|digits:8',
+    //    'address'       => 'nullable|min:5',
+    //    'phone'         => 'nullable|min:10'  // Video: min:6
+    // ];
+    // $this->validate($request, $rules);
+    $this->verificar($request);  // Replaces upper validation call
     $doctor   = User::doctors()->findOrFail($id);
     $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
     $password = $request->input('password');
@@ -117,7 +135,7 @@ class DoctorsController extends Controller
         // $data+= [ 'password' => bcrypt( $password ) ]; // Own Try this one
     $doctor->fill( $data );
     $doctor->save();
-    $notification = '¡La información del médico: '.$doctor->name.' se actualizó correctamente!';
+    $notification = "¡La información del $this->mainItem: ".$doctor->name.' se actualizó correctamente!';
     return redirect("/$this->mainRoute")->with(compact('notification'));    
   }
 
@@ -127,25 +145,23 @@ class DoctorsController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
-  {
-    $doctor       = User::doctors()->findOrFail($id);
-    // dd($doctor);
-    $name         = $doctor->name;
-    $doctor->delete();
-    // $notification = "¡Los datos del médico: $doctorName se han eliminado con éxito!";
-    $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";
-    return redirect("/$this->mainRoute")->with(compact('notification'));
-  }
     // Es igual que en DoctorController.php y PatientController.php pero no funciona. 
     // ¡¡¡No borra el registro!!!
     // Porque no se conecta a la DB y por ende no encuentra tabla/registro
-    public function destroy_Fail(User $doctor)
-    {
-      dd($doctor);
-      $doctorName = $doctor->name;
-      $doctor->delete();
-      $notification = "¡Los datos del médico: $doctorName se han eliminado con éxito!";
-      return redirect("/$this->mainRoute")->with(compact('notification'));
-    }
+  public function destroy(User $doctore)
+  {
+    $name = $doctore->name;
+    $doctore->delete();
+    $notification = "¡Los datos del $this->mainItem: $name se han eliminado con éxito!";
+    return redirect("/$this->mainRoute")->with(compact('notification'));
+  }
+  public function destroy_ok($id)
+  {
+    $doctor       = User::doctors()->findOrFail($id);
+    $name         = $doctor->name;
+    $doctor->delete();
+    // $notification = "¡Los datos del $this->mainItem: $doctorName se han eliminado con éxito!";
+    $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";
+    return redirect("/$this->mainRoute")->with(compact('notification'));
+  }
 }

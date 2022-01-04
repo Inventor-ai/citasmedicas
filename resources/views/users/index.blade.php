@@ -1,9 +1,9 @@
 @extends('layouts.list')
 <?php
-  $mainTitle = 'Médicos+';
-  $mainItem  = 'médico+';
-  $mainRoute = 'doctorsPlus';
-  $mainData  = $doctors;
+  $mainTitle = 'Usuarios';
+  $mainItem  = 'usuario';
+  $mainRoute = 'users';
+//   $mainData  = $mainData;
 ?>
 @section('title', "$mainTitle")
 @section('createText', "Nuevo $mainItem")
@@ -14,27 +14,27 @@
         <tr>
           <th scope="col">Nombre</th>
           <th scope="col">E-mail</th>
-          <th scope="col">Identificación</th>
+          <th scope="col">Rol</th>
           <th scope="col">Opciones</th>
         </tr>
       </thead>
       <tbody>
-        @foreach ($doctors as $doctor)
+        @foreach ($mainData as $user)
         <tr>
           <th scope="row">
-            {{ $doctor ->name }}
+            {{ $user ->name }}
           </th>
           <td>
-            {{ $doctor ->email }}
+            {{ $user ->email }}
           </td>
           <td>
-            {{ $doctor ->identity_card }}
+            {{ $user ->role }}
           </td>
           <td>
-            <form method="POST" action="{{url("/$mainRoute/$doctor->id")}}">
+            <form method="POST" action="{{url("/$mainRoute/$user->id")}}">
               @csrf
               @method('DELETE')
-              <a href="{{url("/$mainRoute/$doctor->id/edit")}}" class="btn btn-sm btn-primary">Editar</a>
+              <a href="{{url("/$mainRoute/$user->id/edit")}}" class="btn btn-sm btn-primary">Editar</a>
               <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
             </form>
           </td>
