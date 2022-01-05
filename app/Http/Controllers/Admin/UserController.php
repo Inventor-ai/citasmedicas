@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 
@@ -56,39 +57,41 @@ class UserController extends Controller
   public function edit(User $user)
   {
     // dd($user);
-    return view("$this->mainRoute.edit", compact('user'));
+    // return view("$this->mainRoute.edit", compact('user'));  // Works Ok
+    $mainData = $user;                                         // Renaming variable
+    return view("$this->mainRoute.edit", compact('mainData'));
   }
 
   public function update(Request $request, $id)
   {
     $this->verificar($request);
-    $patient  = User::patients()->findOrFail($id);
+    $user     = User::users()->findOrFail($id);
     $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
     $password = $request->input('password');
     if ($password) 
         $data+= [ 'password' => bcrypt( $password ) ]; // Own Ok
     //  $data['password'] = bcrypt( $password );       // video Ok
-    $patient->fill( $data );
-    $patient->save();
+    $user->fill( $data );
+    $user->save();
     $notification = "Datos del $this->mainItem ".$request->input('name').' registrados correctamente';
-    // $notification = "Datos del $this->mainItem ".$patient->name.' registrados correctamente';
-    // $notification = '¡La información del paciente: '.$patient->name.' se actualizó correctamente!';
+    // $notification = "Datos del $this->mainItem ".$user->name.' registrados correctamente';
+    // $notification = '¡La información del paciente: '.$user->name.' se actualizó correctamente!';
     return redirect("/$this->mainRoute")->with( compact('notification') );
   }
 
   public function destroy(User $user)
   {
     // dd($user);
-    $name         = $user->name;
+    $name = $user->name;
     $user->delete();
     $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";
     return redirect("/$this->mainRoute")->with(compact('notification'));
   }
   public function destroy_ok($id)    // Own Ok
   {
-    $patient      = User::patients()->findOrFail($id);
-    $name         = $patient->name;
-    $patient->delete();
+    $user = User::users()->findOrFail($id);
+    $name = $user->name;
+    $user->delete();
     $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";
     return redirect("/$this->mainRoute")->with(compact('notification'));
   }

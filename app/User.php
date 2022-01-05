@@ -49,6 +49,7 @@ class User extends Authenticatable
 
     public function scopeUsers($query)
     {
-        return $query->where('role', 'like', '%');
+        // return $query->where('role', 'like', '%');  // All Users
+        return $query->where('role', 'admin');
     }
 }

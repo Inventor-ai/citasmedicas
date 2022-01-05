@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 
@@ -22,11 +23,7 @@ class PatientController extends Controller
    */
   public function index()
   {
-    // $patients = User::all();
-    // $patients = User::where('role', 'patient')->get(); // Modelo sin Scope
-    // $patients = User::Patients()->get();               // Modelo con Scope. También funciona
-    // $patients = User::patients()->get();                  // Modelo con Scope (Video)
-    $patients = User::patients()->paginate(5);                  // Modelo con Scope (Video)
+    $patients = User::patients()->paginate(5);
     return view("$this->mainRoute.index", compact('patients') );
   }
 
@@ -60,16 +57,7 @@ class PatientController extends Controller
    */
   public function store(Request $request)
   {
-    //dd($request);
-    // $rules = [
-    //    'name'          => 'required|min:3',
-    //    'email'         => 'required|email',
-    //    'identity_card' => 'nullable|digits:8',
-    //    'address'       => 'nullable|min:5',
-    //    'phone'         => 'nullable|min:10'
-    // ];
-    // $this->validate($request, $rules);
-    $this->verificar($request);  // Replaces upper validation call
+    $this->verificar($request);  // Exceute Laravel validation call
     // Mass Assignment
     User::create(
       $request->only('name', 'email', 'identity_card', 'address', 'phone') +
@@ -118,16 +106,7 @@ class PatientController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //dd($request);
-    // $rules = [
-    //    'name'          => 'required|min:3',
-    //    'email'         => 'required|email',
-    //    'identity_card' => 'nullable|digits:8',
-    //    'address'       => 'nullable|min:5',
-    //    'phone'         => 'nullable|min:10'
-    // ];
-    // $this->validate($request, $rules);
-    $this->verificar($request);  // Replaces upper validation call
+    $this->verificar($request);  // Exceute Laravel validation call
     $patient  = User::patients()->findOrFail($id);
     $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
     $password = $request->input('password');
