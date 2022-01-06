@@ -1,4 +1,4 @@
-<!-- Navigation -->
+{{-- Navigation --}}
 <h6 class="navbar-heading text-muted">
   @if(auth()->user()->role == 'admin')
      Gestionar datos
@@ -40,12 +40,12 @@
     </li>
   @elseif( auth()->user()->role == 'doctor')
     <li class="nav-item">
-      <a class="nav-link" href="{{url('/home')}}">
+      <a class="nav-link" href="{{url('/schedule')}}">
         <i class="ni ni-calendar-grid-58 text-danger"></i> Gestionar hoario
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{url('/doctors')}}">
+      <a class="nav-link" href="{{url('/schedule')}}">
         <i class="ni ni-time-alarm text-primary"></i> Mis citas
       </a>
     </li>
@@ -77,11 +77,11 @@
   </li>
 </ul>
 @if(auth()->user()->role == 'admin')
-  <!-- Divider -->
+  {{-- Divider --}}
   <hr class="my-3">
-  <!-- Heading -->
+  {{-- Heading --}}
   <h6 class="navbar-heading text-muted">Reportes</h6>
-  <!-- Navigation -->
+  {{-- Navigation --}}
   <ul class="navbar-nav mb-md-3">
     <li class="nav-item">
       <a class="nav-link" href="#">

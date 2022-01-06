@@ -23,10 +23,6 @@ class DoctoresController extends Controller
    */
   public function index()
   {
-    // $doctors = User::all();
-    // $doctors = User::where('role', 'doctor')->get(); // Modelo sin scope
-    // $doctors = User::Doctors()->get();               // Modelo con Scope. También funciona
-    // $doctors = User::doctors()->get();               // Modelo con Scope (Video)
     $doctors = User::doctors()->paginate(5);            // Paginación
     return view("$this->mainRoute.index", compact('doctors') );
   }
@@ -61,14 +57,6 @@ class DoctoresController extends Controller
    */
   public function store(Request $request)
   {
-    // $rules = [
-    //    'name'          => 'required|min:3',
-    //    'email'         => 'required|email',
-    //    'identity_card' => 'nullable|digits:8',
-    //    'address'       => 'nullable|min:5',
-    //    'phone'         => 'nullable|min:10'  // Video: min:6
-    // ];
-    // $this->validate($request, $rules);
     $this->verificar($request);  // Replaces upper validation call
     // Mass Assignment
     User::create(
@@ -118,21 +106,13 @@ class DoctoresController extends Controller
    */
   public function update(Request $request, $id)
   {
-    // $rules = [
-    //    'name'          => 'required|min:3',
-    //    'email'         => 'required|email',
-    //    'identity_card' => 'nullable|digits:8',
-    //    'address'       => 'nullable|min:5',
-    //    'phone'         => 'nullable|min:10'  // Video: min:6
-    // ];
-    // $this->validate($request, $rules);
     $this->verificar($request);  // Replaces upper validation call
     $doctor   = User::doctors()->findOrFail($id);
     $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
     $password = $request->input('password');
     if ($password)
         $data['password'] = bcrypt( $password );          // video
-        // $data+= [ 'password' => bcrypt( $password ) ]; // Own Try this one
+        // $data+= [ 'password' => bcrypt( $password ) ]; // Own Ok
     $doctor->fill( $data );
     $doctor->save();
     $notification = "¡La información del $this->mainItem: ".$doctor->name.' se actualizó correctamente!';
@@ -157,10 +137,10 @@ class DoctoresController extends Controller
   }
   public function destroy_ok($id)
   {
-    $doctor       = User::doctors()->findOrFail($id);
-    $name         = $doctor->name;
+    $doctor = User::doctors()->findOrFail($id);
+    $name   = $doctor->name;
     $doctor->delete();
-    // $notification = "¡Los datos del $this->mainItem: $doctorName se han eliminado con éxito!";
+    // $notification = "¡Los datos del $this->mainItem: $name se han eliminado con éxito!";
     $notification = "¡La información del $this->mainItem: $name se ha eliminado con éxito!";
     return redirect("/$this->mainRoute")->with(compact('notification'));
   }
