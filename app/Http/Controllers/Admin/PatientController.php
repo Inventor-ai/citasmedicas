@@ -91,7 +91,7 @@ class PatientController extends Controller
   {
     return view("$this->mainRoute.edit", compact('patient'));
   }
-  public function edit_Ok($id)         // Own - Ok
+  public function edit_Ok($id)         // Ok - Own
   {
     $patient = User::patients()->findOrFail($id);
     return view("$this->mainRoute.edit", compact('patient'));

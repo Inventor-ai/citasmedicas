@@ -21,9 +21,6 @@ class DoctorController extends Controller
      */
     public function index()
     {
-    //   $doctors = User::all();
-    //   $doctors = User::where('role', 'doctor')->get(); // Modelo sin scope
-    //   $doctors = User::Doctors()->get();               // Modelo con Scope. También funciona
       $doctors = User::doctors()->get();                  // Modelo con Scope (Video)
       return view('doctors.index', compact('doctors') );
     }
@@ -54,19 +51,6 @@ class DoctorController extends Controller
         'phone'         => 'nullable|min:10'  // Video: min:6
       ];
       $this->validate($request, $rules);
-
-      // Array asociativo creado manualmente
-      //   User::create(
-      //     [
-      //       'name'           => $request->input('name') ,
-      //       'email'          => 'required|email',
-      //       'indentity_card' => 'digits:8',
-      //       'address'        => 'min:5',
-      //       'phone'          => 'min:10'  // Video: min:6
-      //     ]
-      //   );
-
-      // Mass Assignment
       User::create(
         $request->only('name', 'email', 'identity_card', 'address', 'phone')
                  + [ 
@@ -115,7 +99,7 @@ class DoctorController extends Controller
             'email'         => 'required|email',
             'identity_card' => 'nullable|digits:8',
             'address'       => 'nullable|min:5',
-            'phone'         => 'nullable|min:10'  // Video: min:6
+            'phone'         => 'nullable|min:10'  // min:6  - Video
         ];
         $this->validate($request, $rules);
           
@@ -123,12 +107,11 @@ class DoctorController extends Controller
         $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
         $password = $request->input('password');
         if ($password)
-            $data['password'] = bcrypt( $password );          // video
-            // $data+= [ 'password' => bcrypt( $password ) ]; // Own Try this one
+            $data['password'] = bcrypt( $password );
         $doctor->fill( $data );
         $doctor->save();
         $notification = '¡La información del médico: '.$doctor->name.' se actualizó correctamente!';
-        return redirect('/doctors')->with(compact('notification'));    
+        return redirect('/doctors')->with(compact('notification'));
     }
 
     /**

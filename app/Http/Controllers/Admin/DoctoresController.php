@@ -111,8 +111,7 @@ class DoctoresController extends Controller
     $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
     $password = $request->input('password');
     if ($password)
-        $data['password'] = bcrypt( $password );          // video
-        // $data+= [ 'password' => bcrypt( $password ) ]; // Own Ok
+        $data+= [ 'password' => bcrypt( $password ) ];
     $doctor->fill( $data );
     $doctor->save();
     $notification = "¡La información del $this->mainItem: ".$doctor->name.' se actualizó correctamente!';
