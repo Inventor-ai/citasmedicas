@@ -56,7 +56,7 @@
     </li>
   @else {{-- patient --}}
     <li class="nav-item">
-      <a class="nav-link" href="{{url('/home')}}">
+      <a class="nav-link" href="{{url('/appointment/create')}}">
         <i class="ni ni-laptop text-danger"></i> Reservar cita
       </a>
     </li>

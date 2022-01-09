@@ -12,9 +12,10 @@ class ScheduleController extends Controller
   private $days = [
              'Lunes',  'Martes', 'Miércoles',
              'Jueves', 'Viernes','Sábado', 'Domingo'
-         ];
+  ];
+
   public function edit()
-  {
+  {    
     $workDays = WorkDay::where('user_id', auth()->id())->get();
     $workDays->map( function ($workDay) {
        $workDay->morning_start   = (new Carbon($workDay->morning_start  ))->format('g:i A');
@@ -44,12 +45,10 @@ class ScheduleController extends Controller
          $errEnd = "son inconsistentes para el día";
       if ($morning_start[$i] > $morning_end[$i]) {
           $errors[] = "$errBeg matutino $errEnd " . $this->days[$i] . " de: $morning_start[$i] vs $morning_end[$i]";
-        //$errors[] = "Las horas del turno matutino son inconsistentes para el día: $i";
       }
       $errMsg = "Las horas del turno matutino son inconsistentes para el día: $i";
       if ($afternoon_start[$i] > $afternoon_end[$i]) {
           $errors[] = "$errBeg tarde $errEnd " . $this->days[$i] . " de: $afternoon_start[$i] vs $afternoon_end[$i]";
-        //$errors[] = "Las horas del turno tarde son inconsistentes para el día: $i";
       }
       // dd($request->all());
       WorkDay::updateOrCreate(

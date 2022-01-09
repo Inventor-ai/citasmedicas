@@ -48,7 +48,7 @@ class SpecialtyController extends Controller
     $specialty->description = $request->input('description');
     $specialty->save();              // Insert DB
     // return back();                // Returns user to last page before insert
-    $notification = '¡La especialidad se ha registrado correctamente!';
+    $notification = "¡La especialidad $specialty->name se ha registrado correctamente!";
     return redirect('/specialties')->with( compact('notification') ); // Return to Spacialties list
   }
 
@@ -70,7 +70,7 @@ class SpecialtyController extends Controller
     $specialty->name        = $request->input('name');
     $specialty->description = $request->input('description');
     $specialty->save();              // UPDATE
-    $notification = '¡La especialidad se ha actualizado correctamente!';
+    $notification = "¡La especialidad $specialty->name se ha actualizado correctamente!";
     return redirect('/specialties')->with( compact('notification') ); // Return to Spacialties list
   }
 
