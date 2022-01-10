@@ -14,17 +14,43 @@ class UsersTableSeeder extends Seeder
     {
       User::create(
         [
-        // 'name'          => "Maruschka Detmers",
-        // 'email'         => "md@mme.com",
-        // 'identity_card' => '19621216',    // Own's
-        'name'          => "Connie Carter",
-        'email'         => "cc@mme.com",
-        'identity_card' => '19881124',    // Own's
-        'password'      => bcrypt('mme'),
-        // 'identity_card' => '76474871', // video
+        'name'          => "Maruschka Detmers",
+        'email'         => "md@mme.com",
+        'identity_card' => '19621216',    // Own's
         'address'       => "Camden Town, Londres, Inglaterra, Reino Unido",
+        'password'      => bcrypt('mme'),
         'phone'         => "",
         'role'          => "admin"]
+      );
+      User::create(
+        [
+        'name'          => "Liya Silver",
+        'email'         => "ls@mme.com",
+        'identity_card' => '19990225',
+        'address'       => "San Petersburgo, Rusia",
+        'password'      => bcrypt('mme'),
+        'phone'         => "",
+        'role'          => "doctor"]
+      );
+      User::create(
+        [
+        'name'          => "Donna Edmondson",
+        'email'         => "donna.edmondson@mme.com",
+        'identity_card' => '19660201',
+        'address'       => "Greensboro, Carolina del Norte, Estados Unidos",
+        'password'      => bcrypt('mme'),
+        'phone'         => "",
+        'role'          => "doctor"]
+      );
+      User::create(
+        [
+        'name'          => "Gabbie Carter",
+        'email'         => "gabby.carter@mme.com",
+        'identity_card' => '20000804',
+        'address'       => "Austin, Texas, Estados Unidos",
+        'password'      => bcrypt('mme'),
+        'phone'         => "",
+        'role'          => "patient"]
       );
       factory(User::class, 50)->create();
     }

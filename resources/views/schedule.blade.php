@@ -22,7 +22,7 @@
         @endif
         @if( session('errors') )
         <div class="alert alert-danger" role="alert">
-          Los cambios se han guardado pero debe tener en cuenta que:
+          Datos guardados, pero con incongruencias:
           <ul>
             @foreach ( session('errors')  as $error )
               <li>{{ $error }}</li>
@@ -38,7 +38,7 @@
               <th scope="col">Día</th>
               <th scope="col">Activo</th>
               <th scope="col">Turno matutino</th>
-              <th scope="col">Turno tarde</th>
+              <th scope="col">Turno vepertino</th>
             </tr>
           </thead>
           <tbody>
@@ -59,49 +59,44 @@
                 <td>
                   <div class="row">
                     <div class="col">
-                      <select class="form-control" name="morning_start[]">
-                        @for ($i=1; $i < 12; $i++)
-                          <option value="{{ $i < 10 ? "0$i" : $i }}:00"
-                          @if( $i.':00 AM' == $workDay->morning_start ) selected @endif >{{$i}}:00 am</option>
-                          <option value="{{ $i < 10 ? "0$i" : $i }}:30"
-                          @if( "$i:30 AM" == $workDay->morning_start ) selected @endif >{{$i}}:30 am</option>
-                        @endfor
+                      <select class="form-control" name="morning_start[]" style="text-transform: lowercase;">
+                        @foreach ($turn1st as $hour)
+                          <option value="{{ $hour['value'] }}"
+                          @if( $hour['text'] == $workDay->morning_start ) selected @endif
+                          >{{ $hour['text'] }}</option>
+                        @endforeach
                       </select>
                     </div>
                     <div class="col">
-                      <select class="form-control" name="morning_end[]">
-                        @for ($i=1; $i < 12; $i++)
-                          <option value="{{ $i < 10 ? "0$i" : $i }}:00"
-                          {{ $i.':00 AM' == $workDay->morning_end ? "selected" : "" }}>{{$i}}:00 am</option>
-                          {{-- @if( $i.':00 AM' == $workDay->morning_end ) selected @endif >{{$i}}:00 am</option> --}}
-                          <option value="{{ $i < 10 ? "0$i" : $i }}:30"
-                          {{ $i.':30 AM' == $workDay->morning_end ? "selected" : "" }}>{{$i}}:30 am</option>
-                          {{-- @if( "$i:30 AM" == $workDay->morning_end ) selected @endif >{{$i}}:30 am</option> --}}
-                        @endfor
-                      </select>
+                      <select class="form-control" name="morning_end[]" style="text-transform: lowercase;">
+                        @foreach ($turn1st as $hour)
+                          <option value="{{ $hour['value'] }}"
+                            {{ $hour['text'] == $workDay->morning_end?'selected':''}}
+                           >{{ $hour['text'] }}
+                          </option>
+                        @endforeach
+                      </select>                      
                     </div>
                   </div>
                 </td>
                 <td>
                   <div class="row">
                     <div class="col">
-                      <select class="form-control" name="afternoon_start[]">
-                        @for ($i=1; $i < 12; $i++)
-                          <option value="{{$i+12}}:00"
-                          @if( $i.':00 PM' == $workDay->afternoon_start ) selected @endif >{{$i}}:00 pm</option>
-                          <option value="{{$i+12}}:30"
-                          @if( "$i:30 PM" == $workDay->afternoon_start ) selected @endif >{{$i}}:30 pm</option>
-                        @endfor
+                      <select class="form-control" name="afternoon_start[]" style="text-transform:lowercase;">
+                        @foreach ($turn2nd as $hour)
+                          <option value="{{ $hour['value'] }}"
+                          @if( $hour['text'] == $workDay->afternoon_start ) selected @endif
+                           >{{ $hour['text'] }}</option>
+                        @endforeach
                       </select>
                     </div>
                     <div class="col">
-                      <select class="form-control" name="afternoon_end[]">
-                        @for ($i=1; $i < 12; $i++)
-                          <option value="{{$i+12}}:00"
-                          @if( $i.':00 PM' == $workDay->afternoon_end ) selected @endif >{{$i}}:00 pm</option>
-                          <option value="{{$i+12}}:30"
-                          @if( "$i:30 PM" == $workDay->afternoon_end ) selected @endif >{{$i}}:30 pm</option>
-                        @endfor
+                      <select class="form-control" name="afternoon_end[]" style="text-transform: lowercase;">
+                        @foreach ($turn2nd as $hour)
+                          <option value="{{ $hour['value'] }}"
+                          @if( $hour['text'] == $workDay->afternoon_end ) selected @endif
+                           >{{ $hour['text'] }}</option>
+                        @endforeach
                       </select>
                     </div>
                   </div>

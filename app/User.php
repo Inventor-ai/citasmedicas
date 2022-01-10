@@ -52,4 +52,10 @@ class User extends Authenticatable
         // return $query->where('role', 'like', '%');  // All Users
         return $query->where('role', 'admin');
     }
+
+    // $user->specialties();
+    public function specialties()
+    {
+      return $this->belongsToMany(Specialty::class);
+    }
 }
