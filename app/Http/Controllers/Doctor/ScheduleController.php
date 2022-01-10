@@ -45,16 +45,9 @@ class ScheduleController extends Controller
     });
     // dd($workDays);
     // dd($workDays->toArray());
-    $from = 1;
-    $to   = 11;
-    $am   = false;
-    // $am   = true;
-    // dd( $this->getHoursList($from, $to, $am) );
     $turn1st = $this->getHoursList(1, 11, true);
-    // dd($turn1st);
     $turn2nd = $this->getHoursList(1, 11, false);
-    // dd($turn2nd);
-    $days = $this->days;
+    $days    = $this->days;
     return view('schedule', compact('workDays', 'days', 'turn1st', 'turn2nd'));
   }
 
@@ -73,15 +66,11 @@ class ScheduleController extends Controller
          $errEnd = "son inconsistentes para el día";
       if ($morning_start[$i] > $morning_end[$i]) {
           $errors[] = "$morning_start[$i] a $morning_end[$i] ".$this->days[$i]. " turno matutino";
-          // $errors[] = "$errBeg matutino $errEnd ".$this->days[$i]." de: $morning_start[$i] a $morning_end[$i]";
       }
-      // $errMsg = "Las horas del turno matutino son inconsistentes para el día: $i";
       if ($afternoon_start[$i] > $afternoon_end[$i]) {
           $errors[] = "$afternoon_start[$i] a $afternoon_end[$i] ".$this->days[$i]. " turno vespertino";
-          // $errors[] = "$errBeg tarde $errEnd ".$this->days[$i]." de: $afternoon_start[$i] a $afternoon_end[$i]";
       }
       // dd($request->all());
-      /*
       WorkDay::updateOrCreate(
         [ // Key to locate record
           'day'             => $i,
@@ -95,7 +84,6 @@ class ScheduleController extends Controller
           'afternoon_end'   => $afternoon_end[$i]
         ]
       );
-      */
     }
     if ( count($errors) > 0 )
          return back()->with(compact('errors'));
