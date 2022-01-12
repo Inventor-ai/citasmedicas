@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\WorkDay;
 use Carbon\Carbon;
+use App\Libs\Items4Select;
 
 class ScheduleController extends Controller
 {
@@ -14,25 +15,6 @@ class ScheduleController extends Controller
              'Jueves', 'Viernes','Sábado', 'Domingo'
   ];
 
-  private function getHoursList($from, $to, $am = true) {
-    $hours = [];
-    $mins  = ['00', '30'];
-    $amPm  = $am?"AM":"PM";
-    for ($i = $from; $i <= $to; $i++) {
-      $num = $i + ($am?0:12);
-      $hr = "$num";
-      if ($num < 10) 
-          $hr = "0$num";
-      foreach ($mins as $min) {
-        $hours[] = array (
-           'value' => "$hr:$min",
-           'text'  => "$i:$min $amPm"
-        );
-      }
-    }
-    return $hours;
-  }
-  
   public function edit()
   {
     $workDays = WorkDay::where('user_id', auth()->id())->get();
@@ -43,10 +25,8 @@ class ScheduleController extends Controller
        $workDay->afternoon_end   = (new Carbon($workDay->afternoon_end  ))->format('g:i A');
        return $workDay;
     });
-    // dd($workDays);
-    // dd($workDays->toArray());
-    $turn1st = $this->getHoursList(1, 11, true);
-    $turn2nd = $this->getHoursList(1, 11, false);
+    $turn1st = Items4Select::getHoursList(1, 11, true);
+    $turn2nd = Items4Select::getHoursList(1, 11, false);
     $days    = $this->days;
     return view('schedule', compact('workDays', 'days', 'turn1st', 'turn2nd'));
   }

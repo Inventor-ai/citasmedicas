@@ -42,67 +42,141 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($workDays as $key => $workDay)
-              <tr>
-                <th>{{ $days[$key] }}</th>
-                <td>
-                  <label class="custom-toggle">
-                      <input type="checkbox" name="active[]" value="{{$key}}"
-                        {{-- Video version --}}
-                        {{-- @if( $workDay->active == 1 ) checked @endif --}}
-                        {{-- Owner's version --}}
-                        {{ $workDay['active'] == 1 ? 'checked' : '' }}
-                      >
+            @if(count($workDays) == 0) {{-- Sin datos --}}
+              @foreach ($days as $key => $day)  
+                <tr>
+                  <th>{{ $day }}</th>
+                  <td>
+                    <label class="custom-toggle">
+                      <input type="checkbox" name="active[]" value="{{$key}}" >
                       <span class="custom-toggle-slider rounded-circle"></span>
-                  </label>
-                </td>
-                <td>
-                  <div class="row">
-                    <div class="col">
-                      <select class="form-control" name="morning_start[]" style="text-transform: lowercase;">
-                        @foreach ($turn1st as $hour)
-                          <option value="{{ $hour['value'] }}"
-                          @if( $hour['text'] == $workDay->morning_start ) selected @endif
-                          >{{ $hour['text'] }}</option>
-                        @endforeach
-                      </select>
+                    </label>
+                  </td>
+                  <td>
+                  {{-- Created to design Doctor's Schedule form - Time section
+                    <div class="row">
+                      <div class="col">
+                        <select class="form-control" name="morning_start[]" style="text-transform: lowercase;">
+                          @for ($i = 1; $i < 12; $i++)
+                            <option value="{{ $i }}:00">{{ $i }}:00 am</option>
+                            <option value="{{ $i }}:30">{{ $i }}:30 am</option>
+                          @endfor
+                        </select>
+                      </div>
+                      <div class="col">
+                        <select class="form-control" name="morning_end[]" style="text-transform: lowercase;">
+                          @for ($i = 1; $i < 12; $i++)
+                            <option value="{{ $i }}:00">{{ $i }}:00 am</option>
+                            <option value="{{ $i }}:30">{{ $i }}:30 am</option>
+                          @endfor
+                        </select>                      
+                      </div>
                     </div>
-                    <div class="col">
-                      <select class="form-control" name="morning_end[]" style="text-transform: lowercase;">
-                        @foreach ($turn1st as $hour)
-                          <option value="{{ $hour['value'] }}"
-                            {{ $hour['text'] == $workDay->morning_end?'selected':''}}
-                           >{{ $hour['text'] }}
-                          </option>
-                        @endforeach
-                      </select>                      
+                  --}}
+                    <div class="row">
+                      <div class="col">
+                        <select class="form-control" name="morning_start[]" style="text-transform: lowercase;">
+                          @foreach ($turn1st as $hour)
+                            <option value="{{ $hour['value'] }}">{{ $hour['text'] }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col">
+                        <select class="form-control" name="morning_end[]" style="text-transform: lowercase;">
+                          @foreach ($turn1st as $hour)
+                            <option value="{{ $hour['value'] }}">{{ $hour['text'] }}
+                            </option>
+                          @endforeach
+                        </select>                      
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="row">
-                    <div class="col">
-                      <select class="form-control" name="afternoon_start[]" style="text-transform:lowercase;">
-                        @foreach ($turn2nd as $hour)
-                          <option value="{{ $hour['value'] }}"
-                          @if( $hour['text'] == $workDay->afternoon_start ) selected @endif
-                           >{{ $hour['text'] }}</option>
-                        @endforeach
-                      </select>
+
+                  </td>
+                  <td>
+                    <div class="row">
+                      <div class="col">
+                        <select class="form-control" name="afternoon_start[]" style="text-transform:lowercase;">
+                          @for ($i = 1; $i < 12; $i++)
+                            <option value="{{ $i+12 }}:00">{{ $i }}:00 pm</option>
+                            <option value="{{ $i+12 }}:30">{{ $i }}:30 pm</option>
+                          @endfor
+                        </select>
+                      </div>
+                      <div class="col">
+                        <select class="form-control" name="afternoon_end[]" style="text-transform: lowercase;">
+                          @for ($i = 1; $i < 12; $i++)
+                            <option value="{{ $i+12 }}:00">{{ $i }}:00 pm</option>
+                            <option value="{{ $i+12 }}:30">{{ $i }}:30 pm</option>
+                          @endfor
+                        </select>
+                      </div>
                     </div>
-                    <div class="col">
-                      <select class="form-control" name="afternoon_end[]" style="text-transform: lowercase;">
-                        @foreach ($turn2nd as $hour)
-                          <option value="{{ $hour['value'] }}"
-                          @if( $hour['text'] == $workDay->afternoon_end ) selected @endif
-                           >{{ $hour['text'] }}</option>
-                        @endforeach
-                      </select>
+                  </td>
+                </tr>
+              @endforeach
+            @else                       {{-- Con datos --}}
+              @foreach ($workDays as $key => $workDay)
+                <tr>
+                  <th>{{ $days[$key] }}</th>
+                  <td>
+                    <label class="custom-toggle">
+                        <input type="checkbox" name="active[]" value="{{$key}}"
+                          {{-- Video version --}}
+                          {{-- @if( $workDay->active == 1 ) checked @endif --}}
+                          {{-- Owner's version --}}
+                          {{ $workDay['active'] == 1 ? 'checked' : '' }}
+                        >
+                        <span class="custom-toggle-slider rounded-circle"></span>
+                    </label>
+                  </td>
+                  <td>
+                    <div class="row">
+                      <div class="col">
+                        <select class="form-control" name="morning_start[]" style="text-transform: lowercase;">
+                          @foreach ($turn1st as $hour)
+                            <option value="{{ $hour['value'] }}"
+                            @if( $hour['text'] == $workDay->morning_start ) selected @endif
+                            >{{ $hour['text'] }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col">
+                        <select class="form-control" name="morning_end[]" style="text-transform: lowercase;">
+                          @foreach ($turn1st as $hour)
+                            <option value="{{ $hour['value'] }}"
+                              {{ $hour['text'] == $workDay->morning_end?'selected':''}}
+                            >{{ $hour['text'] }}
+                            </option>
+                          @endforeach
+                        </select>                      
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            @endforeach
+                  </td>
+                  <td>
+                    <div class="row">
+                      <div class="col">
+                        <select class="form-control" name="afternoon_start[]" style="text-transform:lowercase;">
+                          @foreach ($turn2nd as $hour)
+                            <option value="{{ $hour['value'] }}"
+                            @if( $hour['text'] == $workDay->afternoon_start ) selected @endif
+                            >{{ $hour['text'] }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="col">
+                        <select class="form-control" name="afternoon_end[]" style="text-transform: lowercase;">
+                          @foreach ($turn2nd as $hour)
+                            <option value="{{ $hour['value'] }}"
+                            @if( $hour['text'] == $workDay->afternoon_end ) selected @endif
+                            >{{ $hour['text'] }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
+            @endif
           </tbody>
         </table>
       </div>

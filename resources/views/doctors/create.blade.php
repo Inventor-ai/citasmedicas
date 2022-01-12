@@ -1,5 +1,10 @@
 @extends('layouts.panel')
 
+@section('styles')
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+@endsection
+
 @section('module', 'PANEL DE ADMINISTRACIÓN')
 
 @section('content')
@@ -29,6 +34,15 @@
         <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
       </div>
       <div class="form-group">
+        <label for="specialties">Especialidad</label>
+        <select name="specialties[]" id="specialties"  title="Seleccionar una o más"
+          class="form-control selectpicker show-tick" data-style="btn-outline-primary" multiple>
+          @foreach ($specialties as $Specialty)
+            <option value="{{ $Specialty->id }}">{{ $Specialty->name }}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="form-group">
         <label for="email">Email</label>
         <input type="text" id="email" name="email" class="form-control" value="{{ old('email') }}">
       </div>
@@ -52,4 +66,9 @@
     </form>
   </div>
 </div>
+@endsection
+
+@section('scripts')
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 @endsection
