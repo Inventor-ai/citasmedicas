@@ -29,15 +29,16 @@
       @yield('put')
       <div class="form-group">
         <label for="name">Especialidad</label>
-        <select class="form-control" name="" id="">
+        <select class="form-control" name="specialty_id" id="specialty" required>
+          <option value="">Elegir una especialidad</option>
           @foreach ($specialties as $Specialty)
             <option value="{{ $Specialty->id }}">{{ $Specialty->name }}</option>
           @endforeach
         </select>
       </div>
       <div class="form-group">
-        <label for="email">Médico</label>
-        <select class="form-control" name="" id="">
+        <label for="doctor">Médico</label>
+        <select class="form-control" name="doctor_id" id="doctor">
            
         </select>
       </div>
@@ -47,7 +48,12 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
             </div>
-            <input class="form-control datepicker" placeholder="Select date" type="text" value="06/20/2020">
+            <input class="form-control datepicker" placeholder="Select date" type="text" 
+            value="{{ date('Y-m-d') }}" 
+            data-date-format="yyyy-mm-dd" 
+            data-date-start-date="{{ date('Y-m-d') }}" 
+            data-date-end-date="+3d"
+            >
         </div>
       </div>
       <div class="form-group">
@@ -65,4 +71,28 @@
 @endsection
 @section('scripts')
   <script src="{{ asset('/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+  <script>
+     $(function () {
+         const $doctor = $('#doctor');
+         const $specialty = $('#specialty');
+         $specialty.change(()=>{
+             const specialtyId = $specialty.val();
+             const url = `../specialties/${specialtyId}/doctors`;
+             console.log(url);
+             $.getJSON(url, onDoctorsLoaded);
+    
+             function onDoctorsLoaded(doctors) {
+               console.log("doctors:", doctors);  
+               let htmlOptions = "";
+                doctors.forEach( doctor => {
+                   htmlOptions +=`<option value="${doctor.id}">${doctor.name}</option>`;
+                });
+                console.log("htmlOptions:", htmlOptions);
+                // $specialty.html(htmlOptions);
+                // $('#doctor').html(htmlOptions);
+                $doctor.html(htmlOptions);
+             }
+         });
+     });
+  </script>
 @endsection
