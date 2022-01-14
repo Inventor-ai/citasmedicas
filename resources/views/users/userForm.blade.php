@@ -29,6 +29,7 @@
         <label for="name">Nombre del @yield('userType')</label>
         <input type="text" id="name" name="name" class="form-control" @yield('name')>
       </div>
+      @yield('occupation')
       <div class="form-group">
         <label for="email">Email</label>
         <input type="text" id="email" name="email" class="form-control" @yield('email')>

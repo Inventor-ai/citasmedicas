@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Specialty;
 
 class DoctoresController extends Controller
 {
@@ -34,7 +35,8 @@ class DoctoresController extends Controller
    */
   public function create()
   {
-    return view("$this->mainRoute.create");
+    $specialties = Specialty::all();
+    return view("$this->mainRoute.create", compact('specialties'));
   }
 
   private function verificar($request)
@@ -59,13 +61,14 @@ class DoctoresController extends Controller
   {
     $this->verificar($request);  // Replaces upper validation call
     // Mass Assignment
-    User::create(
+    $user = User::create(
       $request->only('name', 'email', 'identity_card', 'address', 'phone') +
          [
             'role'     => 'doctor',
             'password' => bcrypt( $request->input('password') )
          ]
     );
+    $user->specialties()->attach($request->input('specialties'));
     $notification = "Datos del $this->mainItem: ".$request->input('name').' registrados correctamente';
     return redirect("/$this->mainRoute")->with( compact('notification') );
   }
@@ -87,14 +90,18 @@ class DoctoresController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit(User $doctore)
+  public function edit_own(User $doctore)  // Lesson 37:Own
   {
-    return view("$this->mainRoute.edit", compact('doctore'));
+    $specialties = Specialty::all();
+    $specialties_ids = $doctore->specialties()->pluck('specialties.id');
+    return view("$this->mainRoute.edit", compact('doctore', 'specialties', 'specialties_ids'));
   }
-  public function edit_own($id)
+  public function edit($id)                // Lesson 37:Video
   {
-    $doctor = User::doctors()->findOrFail($id);
-    return view("$this->mainRoute.edit", compact('doctor'));
+    $doctore = User::doctors()->findOrFail($id);
+    $specialties = Specialty::all();
+    $specialties_ids = $doctore->specialties()->pluck('specialties.id');
+    return view("$this->mainRoute.edit", compact('doctore', 'specialties', 'specialties_ids'));
   }
 
   /**
@@ -114,10 +121,35 @@ class DoctoresController extends Controller
         $data+= [ 'password' => bcrypt( $password ) ];
     $doctor->fill( $data );
     $doctor->save();
+    $doctor->specialties()->sync($request->input('specialties'));
     $notification = "¡La información del $this->mainItem: ".$doctor->name.' se actualizó correctamente!';
     return redirect("/$this->mainRoute")->with(compact('notification'));    
   }
+/*--
+public function update(Request $request, $id)
+{
+    $rules = [
+        'name'          => 'required|min:3',
+        'email'         => 'required|email',
+        'identity_card' => 'nullable|digits:8',
+        'address'       => 'nullable|min:5',
+        'phone'         => 'nullable|min:10'  // min:6  - Video
+     ];
+    $this->validate($request, $rules);
+      
+    $doctor   = User::doctors()->findOrFail($id);
+    $data     = $request->only('name', 'email', 'identity_card', 'address', 'phone');
+    $password = $request->input('password');
+    if ($password)
+        $data['password'] = bcrypt( $password );
+    $doctor->fill( $data );
+    $doctor->save();
+    $doctor->specialties()->sync($request->input('specialties'));
 
+    $notification = '¡La información del médico: '.$doctor->name.' se actualizó correctamente!';
+    return redirect('/doctors')->with(compact('notification'));
+}
+--*/
   /**
    * Remove the specified resource from storage.
    *

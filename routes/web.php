@@ -57,5 +57,5 @@ Route::middleware('auth')->group(function ()
 
   // JSON
   Route::get('/specialties/{specialty}/doctors', 'Api\SpecialtyController@doctors');
+  Route::get('/schedule/hours', 'Api\ScheduleController@hours');
 });
-
