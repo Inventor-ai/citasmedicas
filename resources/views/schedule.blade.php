@@ -48,11 +48,7 @@
                 <td>
                   <label class="custom-toggle">
                       <input type="checkbox" name="active[]" value="{{$key}}"
-                        {{-- Video version --}}
-                        {{-- @if( $workDay->active == 1 ) checked @endif --}}
-                        {{-- Owner's version --}}
-                        {{ $workDay['active'] == 1 ? 'checked' : '' }}
-                      >
+                        {{ $workDay['active'] == 1 ? 'checked' : '' }}>
                       <span class="custom-toggle-slider rounded-circle"></span>
                   </label>
                 </td>
@@ -60,22 +56,19 @@
                   <div class="row">
                     <div class="col">
                       <select class="form-control" name="morning_start[]" style="text-transform: lowercase;">
-                        @foreach ($turn1st as $hour)
-                          <option value="{{ $hour['value'] }}"
-                          @if( $hour['text'] == $workDay->morning_start ) selected @endif
-                          >{{ $hour['text'] }}</option>
+                        @foreach ($turn1st as $option)
+                          {{$workDayTime = $workDay->morning_start}}
+                          @include('includes.option')
                         @endforeach
                       </select>
                     </div>
                     <div class="col">
                       <select class="form-control" name="morning_end[]" style="text-transform: lowercase;">
-                        @foreach ($turn1st as $hour)
-                          <option value="{{ $hour['value'] }}"
-                            {{ $hour['text'] == $workDay->morning_end?'selected':''}}
-                           >{{ $hour['text'] }}
-                          </option>
+                        @foreach ($turn1st as $option)
+                           {{$workDayTime = $workDay->morning_end}}
+                           @include('includes.option')
                         @endforeach
-                      </select>                      
+                      </select>
                     </div>
                   </div>
                 </td>
@@ -83,19 +76,17 @@
                   <div class="row">
                     <div class="col">
                       <select class="form-control" name="afternoon_start[]" style="text-transform:lowercase;">
-                        @foreach ($turn2nd as $hour)
-                          <option value="{{ $hour['value'] }}"
-                          @if( $hour['text'] == $workDay->afternoon_start ) selected @endif
-                           >{{ $hour['text'] }}</option>
+                        @foreach ($turn2nd as $option)
+                           {{$workDayTime = $workDay->afternoon_start}}
+                           @include('includes.option')
                         @endforeach
                       </select>
                     </div>
                     <div class="col">
                       <select class="form-control" name="afternoon_end[]" style="text-transform: lowercase;">
-                        @foreach ($turn2nd as $hour)
-                          <option value="{{ $hour['value'] }}"
-                          @if( $hour['text'] == $workDay->afternoon_end ) selected @endif
-                           >{{ $hour['text'] }}</option>
+                        @foreach ($turn2nd as $option)
+                           {{$workDayTime = $workDay->afternoon_end}}
+                           @include('includes.option')
                         @endforeach
                       </select>
                     </div>

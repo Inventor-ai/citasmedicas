@@ -1,5 +1,3 @@
-{{-- routeCancel --}}
-{{-- userAction - --}}
 @extends('layouts.panel')
 
 @section('module', 'PANEL DE ADMINISTRACIÓN')
@@ -30,7 +28,7 @@
       <div class="form-group">
         <label for="name">Especialidad</label>
         <select class="form-control" name="specialty_id" id="specialty" required>
-          <option value="">Elegir una especialidad</option>
+          <option value="0">Elegir una especialidad</option>
           @foreach ($specialties as $Specialty)
             <option value="{{ $Specialty->id }}">{{ $Specialty->name }}</option>
           @endforeach
@@ -48,17 +46,19 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
             </div>
-            <input class="form-control datepicker" placeholder="Select date" type="text" 
-            value="{{ date('Y-m-d') }}" 
-            data-date-format="yyyy-mm-dd" 
-            data-date-start-date="{{ date('Y-m-d') }}" 
-            data-date-end-date="+3d"
+            <input class="form-control datepicker" placeholder="Select date"
+              id="date" type="text" value="{{ date('Y-m-d') }}"
+              data-date-format="yyyy-mm-dd" 
+              data-date-start-date="{{ date('Y-m-d') }}" 
+              data-date-end-date="+8d"
             >
         </div>
       </div>
       <div class="form-group">
         <label for="identity_card">Hora de atención</label>
-        <input type="text" id="identity_card" name="identity_card" class="form-control" @yield('identity_card')>
+        <div id="hours">
+            <input type="text" id="identity_card" name="identity_card" class="form-control" @yield('identity_card')>
+        </div>
       </div>
       <div class="form-group">
         <label for="phone">Teléfono / Móvil</label>
@@ -71,28 +71,5 @@
 @endsection
 @section('scripts')
   <script src="{{ asset('/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
-  <script>
-     $(function () {
-         const $doctor = $('#doctor');
-         const $specialty = $('#specialty');
-         $specialty.change(()=>{
-             const specialtyId = $specialty.val();
-             const url = `../specialties/${specialtyId}/doctors`;
-             console.log(url);
-             $.getJSON(url, onDoctorsLoaded);
-    
-             function onDoctorsLoaded(doctors) {
-               console.log("doctors:", doctors);  
-               let htmlOptions = "";
-                doctors.forEach( doctor => {
-                   htmlOptions +=`<option value="${doctor.id}">${doctor.name}</option>`;
-                });
-                console.log("htmlOptions:", htmlOptions);
-                // $specialty.html(htmlOptions);
-                // $('#doctor').html(htmlOptions);
-                $doctor.html(htmlOptions);
-             }
-         });
-     });
-  </script>
+  <script src="{{asset('/js/appointments/create.js')}}"></script>
 @endsection
