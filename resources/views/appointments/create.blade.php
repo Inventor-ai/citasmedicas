@@ -70,9 +70,33 @@
         <label for="identity_card">Hora de atención</label>
         <div id="hours">
           {{-- <input type="text" id="identity_card" name="identity_card" class="form-control" @yield('identity_card')> --}}
-          <div class="alert alert-info" role="alert">
-             Seleccionar un médico y una fecha para ver sus horas disponibles.
-          </div>
+          @if ($intervals)
+          {{-- @if ($interval == old('schedule_time')) checked @endif --}}
+            @foreach ($intervals['morning'] as $key => $interval)
+               <div class="custom-control custom-radio mb-3">
+                <input type="radio" class="custom-control-input"
+                   id="intervalMorning{{ $key }}" name="schedule_time" 
+                value="{{ $interval['start'] }}" required>
+                <label class="custom-control-label" for="intervalMorning{{ $key }}">
+                  {{ $interval['start'] }} - {{ $interval['end'] }}
+                </label>
+              </div>
+            @endforeach
+            @foreach ($intervals['afternoon'] as $key => $interval)
+               <div class="custom-control custom-radio mb-3">
+                <input type="radio" class="custom-control-input"
+                   id="intervalAfternoon{{ $key }}" name="schedule_time" 
+                value="{{ $interval['start'] }}" required>
+                <label class="custom-control-label" for="intervalAfternoon{{ $key }}">
+                  {{ $interval['start'] }} - {{ $interval['end'] }}
+                </label>
+              </div>
+            @endforeach
+          @else
+            <div class="alert alert-info" role="alert">
+              Seleccionar un médico y una fecha para ver sus horas disponibles.
+            </div>
+          @endif
         </div>
       </div>
       <div class="form-group">
