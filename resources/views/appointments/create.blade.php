@@ -62,7 +62,7 @@
               id="date" name="schedule_date" value="{{ old('schedule_date', date('Y-m-d')) }}"
               data-date-format="yyyy-mm-dd" 
               data-date-start-date="{{ date('Y-m-d') }}" 
-              data-date-end-date="+8d"
+              data-date-end-date="+21d"
             >
         </div>
       </div>

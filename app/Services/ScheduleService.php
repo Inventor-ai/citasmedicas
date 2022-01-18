@@ -2,21 +2,20 @@
 namespace App\Services;
 use App\Interfaces\ScheduleServiceInterface;
 use App\WorkDay;
+use App\Appointment;
 use Carbon\Carbon;
 
 class ScheduleService implements ScheduleServiceInterface
 {
-
-   private function getDayFromDate($date)
+   public function isAvailableInterval($doctorId, $date, Carbon $time)
    {
-     $dateCarbon = new Carbon($date);
-     $day = $dateCarbon->dayOfWeek;    
-     // dayOfWeek
-     // Carbon : 0 = sunday - 6 = saturday
-     // WorkDay: 0 = monday - 6 = sunday
-     return ( $day == 0 ? 6 : $day - 1);
+     $exist = Appointment::where('doctor_id', $doctorId)
+                         ->where('schedule_date', $date)
+                         ->where('schedule_time', $time->format('H:i:s'))
+                         ->exists();
+     return !$exist; // available if already none exists
    }
-   
+
    public function getAvailableIntervals($date, $doctorId)
    {
      $workDays = WorkDay::where('active', true)
@@ -30,31 +29,49 @@ class ScheduleService implements ScheduleServiceInterface
         
      if (!$workDays) return [];
 
-     $morningIntervals = $this->getIntervals($workDays->morning_start, 
-                                               $workDays->morning_end);
+     $morningIntervals   = $this->getIntervals($workDays->morning_start, 
+                                               $workDays->morning_end,
+                                               $date, $doctorId);
 
      $afternoonIntervals = $this->getIntervals($workDays->afternoon_start, 
-                                               $workDays->afternoon_end);
+                                               $workDays->afternoon_end,
+                                               $date, $doctorId);
      $data = [];
      $data['morning']   = $morningIntervals;
      $data['afternoon'] = $afternoonIntervals;
      return $data;
    }
 
-    private function getIntervals($start, $end)
-    {
-      $start = new Carbon($start);
-      $end = new Carbon($end);
-  
-      $intervals = [];
-      while ($start < $end) {
-        $interval = [];
-        $interval['start'] = $start->format('g:i:A');
-        $start->addMinutes(30);
-        $interval['end']   = $start->format('g:i:A');
-        $Intervals[] = $interval;
-      }
-      return $Intervals;
-    }
-  
+   private function getDayFromDate($date)
+   {
+     $dateCarbon = new Carbon($date);
+     $day = $dateCarbon->dayOfWeek;    
+     // dayOfWeek
+     // Carbon : 0 = sunday - 6 = saturday
+     // WorkDay: 0 = monday - 6 = sunday
+     return ( $day == 0 ? 6 : $day - 1);
+   }
+
+   private function getIntervals($start, $end, $date, $doctorId)
+   {
+     $start = new Carbon($start);
+     $end   = new Carbon($end);
+     $intervals = [];
+     while ($start < $end) {
+       $interval = [];
+       $interval['start'] = $start->format('g:i A');
+       // $exists = Appointment::where('doctor_id', $doctorId)
+       //                      ->where('schedule_date', $date)
+       //                      ->where('schedule_time', $start->format('H:i:s'))
+       //                      ->exists();
+       // $exists = isAvailableInterval($doctorId, $date, $start->format('H:i:s'));
+       $available = $this->isAvailableInterval($doctorId, $date, $start);
+       $start->addMinutes(30);        
+       $interval['end']   = $start->format('g:i A');
+       if ( $available ) // If available: Add interval to list
+            $intervals[] = $interval;
+     }
+     return $intervals;
+   }
+
 }
