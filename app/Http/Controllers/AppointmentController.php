@@ -11,8 +11,16 @@ use Validator;
 
 class AppointmentController extends Controller
 {
+  
+  public function index()
+  {
+    $appointments = Appointment::all();
+    return view('appointments.index', compact('appointments'));
+  }
+
   public function create(ScheduleServiceInterface $scheduleService)
   {
+    $endDate = 21;  // To Do: Get this value from Config Service
     $specialties = Specialty::all();
     $specialtyId = old('specialty_id');
     if ( $specialtyId ) {
@@ -31,7 +39,7 @@ class AppointmentController extends Controller
       $intervals = null;
     }
 
-    return view('appointments.create', compact('specialties', 'doctors', 'intervals'));
+    return view('appointments.create', compact('specialties', 'doctors', 'intervals', 'endDate'));
   }
 
   public function store(Request $request, ScheduleServiceInterface $scheduleService)
@@ -49,7 +57,7 @@ class AppointmentController extends Controller
     $mesages = [
       'schedule_time.required' => 'Por favor seleccione una hora válida para su cita.',
     ];
-    // $this->validate($request, $rules, $mesages);
+    // $this->validate($request, $rules, $mesages);  // Old validations
     $validator = Validator::make($request->all(), $rules, $mesages);
     $validator->after(function ($validator) use ($request, $scheduleService) {
       $doctorId      = $request->input('doctor_id');
@@ -85,11 +93,11 @@ class AppointmentController extends Controller
     // right time format
     $carbonTime = Carbon::createFromFormat('g:i A', $data['schedule_time'] );
     $data['schedule_time'] = $carbonTime->format('H:i:s');
-    ;
     // dd($data);
     Appointment::create($data);
     $notification = 'La cita se ha registrado correctamente';
-    return back()->with(compact('notification'));
-    // return redirect('/appointments')
+    // return back()->with(compact('notification'));
+    // return redirect('/appointments', compact('notification'))
+    // return redirect('/appointments');
   }
 }

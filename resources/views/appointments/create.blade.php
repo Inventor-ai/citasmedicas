@@ -22,7 +22,7 @@
         @endforeach
       </ul>
     @endif
-    <form action="{{ url('/appointment') }}" method="post">
+    <form action="{{ url('/appointments') }}" method="post">
       @csrf
       <div class="form-group">
          <label for="description">Descripción</label>
@@ -62,16 +62,14 @@
               id="date" name="schedule_date" value="{{ old('schedule_date', date('Y-m-d')) }}"
               data-date-format="yyyy-mm-dd" 
               data-date-start-date="{{ date('Y-m-d') }}" 
-              data-date-end-date="+21d"
+              data-date-end-date="+{{$endDate}}d"
             >
         </div>
       </div>
       <div class="form-group">
         <label for="identity_card">Hora de atención</label>
         <div id="hours">
-          {{-- <input type="text" id="identity_card" name="identity_card" class="form-control" @yield('identity_card')> --}}
           @if ($intervals)
-          {{-- @if ($interval == old('schedule_time')) checked @endif --}}
             @foreach ($intervals['morning'] as $key => $interval)
                <div class="custom-control custom-radio mb-3">
                 <input type="radio" class="custom-control-input"
