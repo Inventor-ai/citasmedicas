@@ -1,24 +1,13 @@
-@extends('layouts.panel')
+@extends('layouts.list')
+<?php
+  $mainTitle = 'Mis citas';
+  // $mainItem  = '';
+  $mainRoute = 'appointments';
+  $mainData  = $appointments;
+?>
+@section('title', "$mainTitle")
 
-@section('module', 'PANEL DE ADMINISTRACIÓN')
-
-@section('content')
-<div class="card shadow">
-  <div class="card-header border-0">
-    <div class="row align-items-center">
-      <div class="col">
-        <h3 class="mb-0">Mis citas</h3>
-      </div>
-    </div>
-  </div>
-  <div class="card-body">
-    @if( session('notification') )
-    <div class="alert alert-success" role="alert">
-      {{ session('notification') }}
-    </div>
-    @endif
-  </div>
-  <div class="table-responsive">
+@section('tableData')
     <table class="table align-items-center table-flush">
       <thead class="thead-light">
         <tr>
@@ -33,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($appointments as $appointment)
+        @foreach ($mainData as $appointment)
         <tr>
           <th scope="row">
             {{ $appointment ->description }}
@@ -69,6 +58,4 @@
         @endforeach
       </tbody>
     </table>
-  </div>
-</div>
 @endsection

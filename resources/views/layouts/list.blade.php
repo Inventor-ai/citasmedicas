@@ -9,9 +9,7 @@
       <div class="col">
         <h3 class="mb-0">@yield('title')</h3>
       </div>
-      <div class="col text-right">
-         <a href="@yield('createRoute')" class="btn btn-sm btn-success">@yield('createText')</a>
-      </div>
+      @yield('createRoute')
     </div>
   </div>
   <div class="card-body">

@@ -6,8 +6,13 @@
 //   $mainData  = $mainData;
 ?>
 @section('title', "$mainTitle")
-@section('createText', "Nuevo $mainItem")
-@section('createRoute', url("$mainRoute/create") )
+
+@section('createRoute')
+  <div class="col text-right">
+    <a href="{{ url("$mainRoute/create") }}" class="btn btn-sm btn-success">{{ "Nuevo $mainItem" }}</a>
+  </div>
+@endsection
+
 @section('tableData')
     <table class="table align-items-center table-flush">
       <thead class="thead-light">
