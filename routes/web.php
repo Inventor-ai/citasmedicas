@@ -54,7 +54,14 @@ Route::middleware('auth')->group(function ()
 {
   Route::get('/appointments/create', 'AppointmentController@create');
   Route::post('/appointments', 'AppointmentController@store');
+    /*
+       appointments -> Verificar
+       -> qué variable pasar a la vista
+       -> 1 único blade (condiciones)
+    */
   Route::get('/appointments', 'AppointmentController@index');
+  Route::get('/appointments/{appointment}/cancel', 'AppointmentController@cancelFormShow');
+  Route::post('/appointments/{appointment}/cancel', 'AppointmentController@cancelExecute');
 
   // JSON
   Route::get('/specialties/{specialty}/doctors', 'Api\SpecialtyController@doctors');

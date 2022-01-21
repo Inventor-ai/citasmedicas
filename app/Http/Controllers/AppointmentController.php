@@ -15,8 +15,20 @@ class AppointmentController extends Controller
   public function index()
   {
     // $appointments = Appointment::all(); 
-    $appointments = Appointment::paginate(5);
-    return view('appointments.index', compact('appointments'));
+    $recsPerPage = 5;
+    $appointmentsPending   = Appointment::where('status', 'Reservada' )
+                                        ->where('patient_id', auth()->id())
+                                        ->paginate($recsPerPage);
+    $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
+                                        ->where('patient_id', auth()->id())
+                                        ->paginate($recsPerPage);
+    $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
+                                                             'Cancelada'])
+                                        ->where('patient_id', auth()->id())
+                                        ->paginate($recsPerPage);
+    return view('appointments.index', 
+        compact('appointmentsPending', 'appointmentsConfirmed', 'appointmentsLog')
+    );
   }
 
   public function create(ScheduleServiceInterface $scheduleService)
@@ -101,4 +113,18 @@ class AppointmentController extends Controller
     // return redirect('/appointments', compact('notification'))
     // return redirect('/appointments');
   }
+
+  public function cancelExecute(Appointment $appointment)
+  {
+    $appointment->status = 'Cancelada';
+    $appointment->save();  // update
+    $notification = '¡La cita se ha cancelado correctamente!';
+    return back()->with(compact('notification'));
+  }
+
+  public function cancelFormShow(Appointment $appointment)
+  {
+    return view('appointments.cancel', compact('appointment'));
+  }
+  
 }

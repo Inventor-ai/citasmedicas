@@ -3,59 +3,46 @@
   $mainTitle = 'Mis citas';
   // $mainItem  = '';
   $mainRoute = 'appointments';
-  $mainData  = $appointments;
+  // $mainData  = $appointments;
 ?>
 @section('title', "$mainTitle")
 
+@section('TabSection')
+  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="pill" role="tab"
+         href="#confirmed-appointments" aria-selected="true">
+         Mis próximas citas
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="pill" role="tab"
+         href="#pending-appointments" aria-selected="false">
+         Citas por confirmar
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="pill" role="tab"
+         href="#log-appointments" aria-selected="false">
+         Historial de citas
+      </a>
+    </li>
+  </ul>
+@endsection
+
 @section('tableData')
-    <table class="table align-items-center table-flush">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Descripción</th>
-          <th scope="col">Especialidad</th>
-          <th scope="col">Médico</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Hora</th>
-          <th scope="col">Tipo</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Opciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach ($mainData as $appointment)
-        <tr>
-          <th scope="row">
-            {{ $appointment ->description }}
-          </th>
-            <td>
-              {{ $appointment ->specialty->name }}
-            </td>
-            <td>
-              {{ $appointment ->doctor->name }}
-            </td>
-            <td>
-              {{ $appointment ->schedule_date }}
-            </td>
-            <td>
-              {{ $appointment ->scheduled_time_12 }}
-            </td>
-            <td>
-              {{ $appointment ->type }}
-            </td>
-            <td>
-              {{ $appointment ->status }}
-            </td>
-          <td>
-            <form method="POST" action="{{url('/appointments/'.$appointment->id.'')}}">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="btn btn-sm btn-danger" title="Cancelar cita">
-                  Cancelar
-              </button>
-            </form>
-          </td>
-        </tr>
-        @endforeach
-      </tbody>
-    </table>
+  <div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="confirmed-appointments" role="tabpanel" aria-labelledby="pills-home-tab">
+      <?php $mainData  = $appointmentsConfirmed; ?>
+      @include('appointments.appointments-confirmed')
+    </div>
+    <div class="tab-pane fade" id="pending-appointments" role="tabpanel" aria-labelledby="pxills-profile-tab">
+      <?php $mainData  = $appointmentsPending; ?>
+      @include('appointments.appointments-pending')
+    </div>
+    <div class="tab-pane fade" id="log-appointments" role="tabpanel" aria-labelledby="pxills-profile-tab">
+      <?php $mainData  = $appointmentsLog; ?>
+      @include('appointments.appointments-log')
+    </div>
+  </div>
 @endsection
