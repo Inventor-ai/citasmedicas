@@ -1,9 +1,8 @@
-confirmed
 <div class="table-responsive">
   <table class="table align-items-center table-flush">
     <thead class="thead-light">
       <tr>
-        <th scope="col">+Descripción</th>
+        <th scope="col">Descripción</th>
         <th scope="col">Especialidad</th>
         <th scope="col">Médico</th>
         <th scope="col">Fecha</th>

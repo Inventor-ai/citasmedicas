@@ -3,6 +3,7 @@
 namespace App;
 use App\Speciaty;
 use Carbon\Carbon;
+use App\AppointmentCancellation;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,6 +35,13 @@ class Appointment extends Model
    public function patient() 
    {
      return $this->belongsTo(User::class);
+   }
+
+   // 1 Appointment hasOne 1 - 1/0 belongsTo AppointmentCancellation
+   // 1 $appointment->cancellation->justification 1/0
+   public function cancellation()
+   {
+     return $this->hasOne(AppointmentCancellation::class);
    }
 
    // accessor

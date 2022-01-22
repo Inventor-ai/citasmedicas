@@ -19,52 +19,12 @@ class ScheduleController extends Controller
 
     $date = $request->input('date');
     /*
-    $dateCarbon = new Carbon($date);
-    $day = $dateCarbon->dayOfWeek;
-
     // dayOfWeek
     // Carbon : 0 = sunday - 6 = saturday
     // WorkDay: 0 = monday - 6 = sunday
     $day = ( $day == 0 ? 6 : $day - 1);
     */
     $doctorId = $request->input('doctor_id');
-    // $workDays = WorkDay::where('active', true)
-    //                     ->where('day', $day)
-    //                     ->where('user_id', $doctorid)
-    //                     ->first([
-    //                         'morning_start',   'morning_end',
-    //                         'afternoon_start', 'afternoon_end'
-    //                     ]
-    // );
-    
-    // if (!$workDays) return [];
-
-    // $morningIntervals = $this->getIntervals($workDays->morning_start, 
-    //                                         $workDays->morning_end);
-
-    // $afternoonIntervals = $this->getIntervals($workDays->afternoon_start, 
-    //                                           $workDays->afternoon_end);
-    // $data = [];
-    // $data['morning']   = $morningIntervals;
-    // $data['afternoon'] = $afternoonIntervals;
-    // return $data;
     return $scheduleService->getAvailableIntervals($date, $doctorId);
   }
-/*
-  private function getIntervals($start, $end)
-  {
-    $start = new Carbon($start);
-    $end = new Carbon($end);
-
-    $intervals = [];
-    while ($start < $end) {
-      $interval = [];
-      $interval['start'] = $start->format('g:i:A');
-      $start->addMinutes(30);
-      $interval['end']   = $start->format('g:i:A');
-      $Intervals[] = $interval;
-    }
-    return $Intervals;
-  }
-*/
 }

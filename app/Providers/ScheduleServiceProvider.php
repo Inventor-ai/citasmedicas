@@ -7,7 +7,7 @@ use App\Services\ScheduleService;
 
 use Illuminate\Support\ServiceProvider;
 
-class SchedulerServiceProvider extends ServiceProvider
+class ScheduleServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

@@ -23,7 +23,7 @@
       (especialidad  {{ $appointment->specialty->name }} ) para día {{ $appointment->schedule_date }}
       a las {{ $appointment->scheduled_time_12 }}
     </p>
-    <form action="" method="POST">
+    <form action="{{url('/appointments/'.$appointment->id.'/cancel')}}" method="POST">
       @csrf
       <div class="form-group">
         <label for="justification">Por favor cuéntanos el motivo de la cancelación:</label>

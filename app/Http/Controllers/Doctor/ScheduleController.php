@@ -41,7 +41,6 @@ class ScheduleController extends Controller
 
   public function store(Request $request)
   {
-    // dd($request);
     $active          = $request->input('active') ? : [];
     $morning_start   = $request->input('morning_start');
     $morning_end     = $request->input('morning_end');
@@ -58,7 +57,6 @@ class ScheduleController extends Controller
       if ($afternoon_start[$i] > $afternoon_end[$i]) {
           $errors[] = "$afternoon_start[$i] a $afternoon_end[$i] ".$this->days[$i]. " turno vespertino";
       }
-      // dd($request->all());
       WorkDay::updateOrCreate(
         [ // Key to locate record
           'day'             => $i,

@@ -21,11 +21,5 @@
     @yield('TabSection')
   </div>
   @yield('tableData')
-  {{-- <div class="table-responsive">
-    @yield('tableData')
-  </div>
-  <div class="card-body">
-    {{ $mainData->links() }}
-  </div> --}}
 </div>
 @endsection
