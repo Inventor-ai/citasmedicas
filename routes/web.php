@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+  //  return view('welcome');
+   return redirect('/login');
 });
 
 Auth::routes();
@@ -60,6 +61,8 @@ Route::middleware('auth')->group(function ()
        -> 1 único blade (condiciones)
     */
   Route::get('/appointments', 'AppointmentController@index');
+  Route::get('/appointments/{appointment}', 'AppointmentController@show');
+
   Route::get('/appointments/{appointment}/cancel', 'AppointmentController@cancelFormShow');
   Route::post('/appointments/{appointment}/cancel', 'AppointmentController@cancelExecute');
 

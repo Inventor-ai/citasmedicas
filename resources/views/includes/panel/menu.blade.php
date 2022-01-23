@@ -45,7 +45,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{url('/schedule')}}">
+      <a class="nav-link" href="{{url('/appointments')}}">
         <i class="ni ni-time-alarm text-primary"></i> Mis citas
       </a>
     </li>
