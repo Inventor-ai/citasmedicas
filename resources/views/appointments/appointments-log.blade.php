@@ -37,7 +37,9 @@
           {{ $appointment->status }}
         </td>
         <td>
-          <a href="{{ url('/appointments/'.$appointment->id) }}" class="btn btn-primary btn-sm">Ver</a>
+          <a href="{{ url('/appointments/'.$appointment->id) }}" 
+             class="btn btn-primary btn-sm">Ver
+          </a>
         </td>
       </tr>
       @endforeach

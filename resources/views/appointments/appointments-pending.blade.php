@@ -1,21 +1,11 @@
 <div class="table-responsive">
   <table class="table align-items-center table-flush">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Descripción</th>
-        <th scope="col">Especialidad</th>
-        <th scope="col">Médico</th>
-        <th scope="col">Fecha</th>
-        <th scope="col">Hora</th>
-        <th scope="col">Tipo</th>
-        {{-- <th scope="col">Estado</th> --}}
-        <th scope="col">Opciones</th>
-      </tr>
-    </thead>
+    @include('appointments.appointments-thead')
     <tbody>
       @foreach ($mainData as $appointment)
       <tr>
-        <th scope="row">
+        @include('appointments.appointments-tbody')
+        {{-- <th scope="row">
           {{ $appointment ->description }}
         </th>
           <td>
@@ -32,17 +22,27 @@
           </td>
           <td>
             {{ $appointment ->type }}
-          </td>
+          </td> --}}
+          {{-- @include('appointments.appointments-data') --}}
           {{-- <td>
             {{ $appointment ->status }}
           </td> --}}
         <td>
+          {{-- @if ($role != 'patient') --}}
+          @if ($role == 'doctor')
+              <form method="POST" class="d-inline-block"
+                action="{{url('/appointments/'.$appointment->id.'/confirmar')}}">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-success" title="Confirmar cita"
+                  data-toggle="tooltip"><i class="ni ni-check-bold"></i></button>
+              </form>
+          @endif
           {{-- Route::post('/appointments/{appointment}/cancel', 'AppointmentController@cancel'); --}}
-          <form method="POST" action="{{url('/appointments/'.$appointment->id.'/cancel')}}">
+          <form method="POST" class="d-inline-block"
+            action="{{url('/appointments/'.$appointment->id.'/cancel')}}">
             @csrf
-            <button type="submit" class="btn btn-sm btn-danger" title="Cancelar cita">
-                Cancelar
-            </button>
+            <button type="submit" class="btn btn-sm btn-danger" title="Cancelar cita"
+              data-toggle="tooltip"><i class="ni ni-fat-remove"></i></button>
           </form>
         </td>
       </tr>

@@ -1,28 +1,23 @@
 <div class="table-responsive">
   <table class="table align-items-center table-flush">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Descripción</th>
-        <th scope="col">Especialidad</th>
-        <th scope="col">Médico</th>
-        <th scope="col">Fecha</th>
-        <th scope="col">Hora</th>
-        <th scope="col">Tipo</th>
-        {{-- <th scope="col">Estado</th> --}}
-        <th scope="col">Opciones</th>
-      </tr>
-    </thead>
+    @include('appointments.appointments-thead')
     <tbody>
       @foreach ($mainData as $appointment)
       <tr>
-        <th scope="row">
+        @include('appointments.appointments-tbody')
+        
+        {{-- <th scope="row">
           {{ $appointment ->description }}
         </th>
           <td>
             {{ $appointment ->specialty->name }}
           </td>
           <td>
-            {{ $appointment ->doctor->name }}
+            @if ($role == 'doctor')
+                {{ $appointment ->patient->name }}
+            @elseif ($role == 'patient')
+                {{ $appointment ->doctor->name }}
+            @endif
           </td>
           <td>
             {{ $appointment ->schedule_date }}
@@ -32,10 +27,12 @@
           </td>
           <td>
             {{ $appointment ->type }}
-          </td>
+          </td> --}}
+
           {{-- <td>
             {{ $appointment ->status }}
           </td> --}}
+        {{-- @include('appointments.appointments-data') --}}
         <td>
           <a class="btn btn-sm btn-danger" title="Cancelar cita"
              href="{{url('/appointments/'.$appointment->id.'/cancel')}}">

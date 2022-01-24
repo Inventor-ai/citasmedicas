@@ -17,42 +17,42 @@ class AppointmentController extends Controller
   {
     // dd( auth()->user() );
     $role = auth()->user()->role;
-    // $appointments = Appointment::all(); 
+    // $appointments = Appointment::all();
     $recsPerPage = 5;
-    $appointmentsPending   = Appointment::where('status', 'Reservada' )
-                                        ->where($role."_id", auth()->id())
-                                        ->paginate($recsPerPage);
-    $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
-                                        ->where($role."_id", auth()->id())
-                                        ->paginate($recsPerPage);
-    $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
-                                                             'Cancelada'])
-                                        ->where($role."_id", auth()->id())
-                                        ->paginate($recsPerPage);
-    // if ($role == 'doctor') {
-    //   # code...
-    //   $appointmentsPending   = Appointment::where('status', 'Reservada' )
-    //                                       ->where("doctor_id", auth()->id())
-    //                                       ->paginate($recsPerPage);
-    //   $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
-    //                                       ->where("doctor_id", auth()->id())
-    //                                       ->paginate($recsPerPage);
-    //   $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
-    //                                                             'Cancelada'])
-    //                                       ->where("doctor_id", auth()->id())
-    //                                       ->paginate($recsPerPage);
-    // } elseif ($role == 'patient') {
-    //   $appointmentsPending   = Appointment::where('status', 'Reservada' )
-    //                                       ->where('patient_id', auth()->id())
-    //                                       ->paginate($recsPerPage);
-    //   $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
-    //                                       ->where('patient_id', auth()->id())
-    //                                       ->paginate($recsPerPage);
-    //   $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
-    //                                                            'Cancelada'])
-    //                                       ->where('patient_id', auth()->id())
-    //                                       ->paginate($recsPerPage);
-    // }
+    if ($role == 'admin') {
+      $appointmentsPending   = Appointment::where('status', 'Reservada' )
+                                          // ->where("doctor_id", auth()->id())
+                                          ->paginate($recsPerPage);
+      $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
+                                          // ->where("doctor_id", auth()->id())
+                                          ->paginate($recsPerPage);
+      $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
+                                                                'Cancelada'])
+                                          // ->where("doctor_id", auth()->id())
+                                          ->paginate($recsPerPage);
+    } elseif ($role == 'doctor') {
+      $appointmentsPending   = Appointment::where('status', 'Reservada' )
+                                          ->where("doctor_id", auth()->id())
+                                          ->paginate($recsPerPage);
+      $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
+                                          ->where("doctor_id", auth()->id())
+                                          ->paginate($recsPerPage);
+      $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
+                                                                'Cancelada'])
+                                          ->where("doctor_id", auth()->id())
+                                          ->paginate($recsPerPage);
+    } elseif ($role == 'patient') {
+      $appointmentsPending   = Appointment::where('status', 'Reservada' )
+                                          ->where('patient_id', auth()->id())
+                                          ->paginate($recsPerPage);
+      $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
+                                          ->where('patient_id', auth()->id())
+                                          ->paginate($recsPerPage);
+      $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
+                                                               'Cancelada'])
+                                          ->where('patient_id', auth()->id())
+                                          ->paginate($recsPerPage);
+    }
     return view('appointments.index', compact('appointmentsPending',
                 'appointmentsConfirmed', 'appointmentsLog', 'role')
     );
@@ -60,7 +60,8 @@ class AppointmentController extends Controller
 
   public function show(Appointment $appointment)
   {
-    return view('appointments.show', compact('appointment'));
+    $role = auth()->user()->role;
+    return view('appointments.show', compact('appointment', 'role'));
   }
 
   public function create(ScheduleServiceInterface $scheduleService)
