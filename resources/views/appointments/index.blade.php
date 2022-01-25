@@ -1,7 +1,7 @@
 @extends('layouts.list')
 <?php
-  $mainTitle = 'Mis citas';
-  // $mainItem  = '';
+  $mainTitle = $role == 'admin' ? 'Citas médicas' : 'Mis citas';
+  $mainItem  = 'cita';
   $mainRoute = 'appointments';
   // $mainData  = $appointments;
 ?>
@@ -34,15 +34,15 @@
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="confirmed-appointments" role="tabpanel" aria-labelledby="pills-home-tab">
       <?php $mainData  = $appointmentsConfirmed; ?>
-      @include('appointments.appointments-confirmed')
+      @include('appointments.tables.confirmed')
     </div>
     <div class="tab-pane fade" id="pending-appointments" role="tabpanel" aria-labelledby="pxills-profile-tab">
       <?php $mainData  = $appointmentsPending; ?>
-      @include('appointments.appointments-pending')
+      @include('appointments.tables.pending')
     </div>
     <div class="tab-pane fade" id="log-appointments" role="tabpanel" aria-labelledby="pxills-profile-tab">
       <?php $mainData  = $appointmentsLog; ?>
-      @include('appointments.appointments-log')
+      @include('appointments.tables.log')
     </div>
   </div>
 @endsection

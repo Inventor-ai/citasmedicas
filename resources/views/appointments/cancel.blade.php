@@ -14,15 +14,32 @@
   </div>
 
   <div class="card-body">
-    @if( session('notification') )
-    <div class="alert alert-success" role="alert">
-      {{ session('notification') }}
-    </div>
+    @if ($role == 'patient')
+      <p>
+        Estás a punto de cancelar tu cita reservada con el médico {{ $appointment->doctor->name }}
+        (especialidad  {{ $appointment->specialty->name }} ) para día {{ $appointment->schedule_date }}
+        a las {{ $appointment->scheduled_time_12 }}
+      </p>
+    @elseif ($role == 'doctor')
+      <p>
+        Estás a punto de cancelar tu cita 
+        con paciente {{ $appointment->patient->name }}
+        quien manifestó: {{ $appointment->description }} y desea atención
+        de la especialidad: {{ $appointment->specialty->name }}
+        para el día {{ $appointment->schedule_date }}
+        a las {{ $appointment->scheduled_time_12 }}
+      </p>
+    @else
+      <p>
+        Estás a punto de cancelar la cita reservada 
+        para el día {{ $appointment->schedule_date }}
+        a las {{ $appointment->scheduled_time_12 }}
+        con el médico {{ $appointment->doctor->name }}
+        (especialidad  {{ $appointment->specialty->name }} ) 
+        por paciente {{ $appointment->patient->name }}
+        que menifestó: {{ $appointment->description }}
+      </p>
     @endif
-    <p>Estás a punto de cancelar tu cita reservada con el médico {{ $appointment->doctor->name }}
-      (especialidad  {{ $appointment->specialty->name }} ) para día {{ $appointment->schedule_date }}
-      a las {{ $appointment->scheduled_time_12 }}
-    </p>
     <form action="{{url('/appointments/'.$appointment->id.'/cancel')}}" method="POST">
       @csrf
       <div class="form-group">

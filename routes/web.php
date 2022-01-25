@@ -62,8 +62,10 @@ Route::middleware('auth')->group(function ()
   Route::get('/appointments', 'AppointmentController@index');
   Route::get('/appointments/{appointment}', 'AppointmentController@show');
 
-  Route::get('/appointments/{appointment}/cancel', 'AppointmentController@cancelFormShow');
+  Route::get ('/appointments/{appointment}/cancel', 'AppointmentController@cancelFormShow');
   Route::post('/appointments/{appointment}/cancel', 'AppointmentController@cancelExecute');
+
+  Route::post('/appointments/{appointment}/confirm', 'AppointmentController@confirm');
 
   // JSON
   Route::get('/specialties/{specialty}/doctors', 'Api\SpecialtyController@doctors');

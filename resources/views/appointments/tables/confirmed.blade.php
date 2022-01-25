@@ -1,10 +1,10 @@
 <div class="table-responsive">
   <table class="table align-items-center table-flush">
-    @include('appointments.appointments-thead')
+    @include('appointments.tables.thead')
     <tbody>
       @foreach ($mainData as $appointment)
       <tr>
-        @include('appointments.appointments-tbody')
+        @include('appointments.tables.tbody')
         
         {{-- <th scope="row">
           {{ $appointment ->description }}
@@ -34,10 +34,17 @@
           </td> --}}
         {{-- @include('appointments.appointments-data') --}}
         <td>
-          <a class="btn btn-sm btn-danger" title="Cancelar cita"
-             href="{{url('/appointments/'.$appointment->id.'/cancel')}}">
+          @if ($role == 'admin')
+              @include('appointments.tables.buttonShow')
+              {{-- <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Ver {{$mainItem}}"
+                href="{{url("/appointments/$appointment->id")}}">Ver
+              </a> --}}
+          @endif
+          @include('appointments.tables.buttonCancel')
+          {{-- <a class="btn btn-sm btn-danger" data-toggle="tooltip" title="Cancelar {{$mainItem}}"
+              href="{{url('/appointments/'.$appointment->id.'/cancel')}}">
             Cancelar
-          </a>
+          </a> --}}
         </td>
       </tr>
       @endforeach

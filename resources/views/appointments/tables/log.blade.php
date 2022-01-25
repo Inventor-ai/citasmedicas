@@ -37,9 +37,10 @@
           {{ $appointment->status }}
         </td>
         <td>
-          <a href="{{ url('/appointments/'.$appointment->id) }}" 
+          @include('appointments.tables.buttonShow')
+          {{-- <a href="{{ url('/appointments/'.$appointment->id) }}" 
              class="btn btn-primary btn-sm">Ver
-          </a>
+          </a> --}}
         </td>
       </tr>
       @endforeach

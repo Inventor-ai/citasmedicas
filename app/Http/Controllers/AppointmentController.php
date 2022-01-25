@@ -160,15 +160,32 @@ class AppointmentController extends Controller
     }
     $appointment->status = 'Cancelada';
     $appointment->save();  // update
-    $notification = '¡La cita se ha cancelado correctamente!';
+    // $notification = '¡La cita se ha cancelado correctamente!';
+    $notification = '¡La cita de '. $appointment->patient->name . 
+                    ' para el '. $appointment->schedule_date .
+                    ' a las '  . (new Carbon($appointment->schedule_time))->format('g:i A').
+                    ' se ha cancelado correctamente!';
     return redirect('/appointments')->with(compact('notification'));
   }
 
   public function cancelFormShow(Appointment $appointment)
   {
-    if ($appointment->status == 'Confirmada' )
-        return view('appointments.cancel', compact('appointment'));
+    if ($appointment->status == 'Confirmada' || $appointment->status == 'Reservada') {
+        $role = auth()->user()->role;
+        return view('appointments.cancel', compact('appointment', 'role'));
+    }
     return redirect('/appointments');
+  }
+
+  public function confirm(Appointment $appointment)
+  {
+    $appointment->status = "Confirmada";
+    $appointment->save();
+    $notification = '¡La cita de '. $appointment->patient->name . 
+                    ' para el '. $appointment->schedule_date .
+                    ' a las '  . (new Carbon($appointment->schedule_time))->format('g:i A').
+                    ' se ha confirmado correctamente!';
+    return redirect('/appointments')->with(compact('notification'));
   }
   
 }

@@ -4,13 +4,11 @@
           <td>
             {{ $appointment ->specialty->name }}
           </td>
-          <td>
-            @if ($role == 'doctor')
-                {{ $appointment ->patient->name }}
-            @elseif ($role == 'patient')
-                {{ $appointment ->doctor->name }}
-            @endif
-          </td>
+          @if ($role == 'doctor')
+              <td>{{ $appointment ->patient->name }}</td>
+          @elseif ($role == 'patient')
+              <td>{{ $appointment ->doctor->name }}</td>
+          @endif
           <td>
             {{ $appointment ->schedule_date }}
           </td>

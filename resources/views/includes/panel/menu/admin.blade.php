@@ -5,7 +5,7 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{{url('/appointments')}}">
-        <i class="ni ni-time-alarm text-primary"></i> Mis citas
+        <i class="ni ni-time-alarm text-primary"></i> Citas médicas
       </a>
     </li>
     <li class="nav-item">
