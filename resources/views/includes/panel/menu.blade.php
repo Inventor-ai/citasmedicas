@@ -7,15 +7,6 @@
   @endif
 </h6>
 <ul class="navbar-nav">
-{{-- 
-  @if(auth()->user()->role == 'admin')
-    @include('includes.panel.menu.admin')
-  @elseif( auth()->user()->role == 'doctor')
-    @include('includes.panel.menu.doctor')
-  @else
-    @include('includes.panel.menu.patient')
-  @endif 
---}}
   @include('includes.panel.menu.'. auth()->user()->role)
   <li class="nav-item">
     <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();

@@ -1,5 +1,8 @@
 @extends('layouts.panel')
-
+<?php
+  // $mainTitle = "Cita # $appointment->id";
+  $mainRoute = 'appointments';
+?>
 @section('module', 'PANEL DE ADMINISTRACIÓN')
 
 @section('content')
@@ -40,14 +43,16 @@
         que menifestó: {{ $appointment->description }}
       </p>
     @endif
-    <form action="{{url('/appointments/'.$appointment->id.'/cancel')}}" method="POST">
+    {{-- <form action="{{url('/appointments/'.$appointment->id.'/cancel')}}" method="POST"> --}}
+    <form action="{{url("/$mainRoute/$appointment->id/cancel")}}" method="POST">
       @csrf
       <div class="form-group">
         <label for="justification">Por favor cuéntanos el motivo de la cancelación:</label>
         <textarea required name="justification" id="justification" class="form-control" rows="3"></textarea>
       </div>
       <button type="submit" class="btn btn-danger">Cancelar cita</button>
-      <a href="{{ url('/appointments') }}" class="btn btn-primary">
+      {{-- <a href="{{ url('/appointments') }}" class="btn btn-primary"> --}}
+      <a href="{{ url("/$mainRoute$tabName") }}" class="btn btn-primary">
         No cancelar y volver a listado de citas
       </a>
     </form>

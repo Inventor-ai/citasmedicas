@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function ()
        -> 1 único blade (condiciones)
     */
   Route::get('/appointments', 'AppointmentController@index');
+  Route::get('/appointments/log', 'AppointmentController@indexLog');
+  Route::get('/appointments/pending', 'AppointmentController@indexPending');
   Route::get('/appointments/{appointment}', 'AppointmentController@show');
 
   Route::get ('/appointments/{appointment}/cancel', 'AppointmentController@cancelFormShow');

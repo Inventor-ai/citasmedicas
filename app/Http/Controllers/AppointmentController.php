@@ -12,56 +12,78 @@ use Validator;
 
 class AppointmentController extends Controller
 {
-  
-  public function index()
+  private function getPageSize()
   {
-    // dd( auth()->user() );
-    $role = auth()->user()->role;
-    // $appointments = Appointment::all();
-    $recsPerPage = 5;
-    if ($role == 'admin') {
-      $appointmentsPending   = Appointment::where('status', 'Reservada' )
-                                          // ->where("doctor_id", auth()->id())
-                                          ->paginate($recsPerPage);
-      $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
-                                          // ->where("doctor_id", auth()->id())
-                                          ->paginate($recsPerPage);
-      $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
-                                                                'Cancelada'])
-                                          // ->where("doctor_id", auth()->id())
-                                          ->paginate($recsPerPage);
-    } elseif ($role == 'doctor') {
-      $appointmentsPending   = Appointment::where('status', 'Reservada' )
-                                          ->where("doctor_id", auth()->id())
-                                          ->paginate($recsPerPage);
-      $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
-                                          ->where("doctor_id", auth()->id())
-                                          ->paginate($recsPerPage);
-      $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
-                                                                'Cancelada'])
-                                          ->where("doctor_id", auth()->id())
-                                          ->paginate($recsPerPage);
-    } elseif ($role == 'patient') {
-      $appointmentsPending   = Appointment::where('status', 'Reservada' )
-                                          ->where('patient_id', auth()->id())
-                                          ->paginate($recsPerPage);
-      $appointmentsConfirmed = Appointment::where('status', 'Confirmada')
-                                          ->where('patient_id', auth()->id())
-                                          ->paginate($recsPerPage);
-      $appointmentsLog       = Appointment::whereIn('status', ['Atendida',
-                                                               'Cancelada'])
-                                          ->where('patient_id', auth()->id())
-                                          ->paginate($recsPerPage);
-    }
-    return view('appointments.index', compact('appointmentsPending',
-                'appointmentsConfirmed', 'appointmentsLog', 'role')
-    );
+    return 5; // Setting from DB
   }
 
-  public function show(Appointment $appointment)
+  private function getData($status = 'Confirmada', $view = 'confirmed', $page = null)
   {
     $role = auth()->user()->role;
-    return view('appointments.show', compact('appointment', 'role'));
+    $rpwp = $this->getPageSize(); // Records Per Web Page = rpwp
+    if ($view == 'log') {
+        if ($role == 'admin') {
+            $appointments = Appointment::whereIn('status', $status)
+                                       ->paginate($rpwp);
+        } elseif ($role == 'doctor') {
+            $appointments = Appointment::whereIn('status', $status)
+                                       ->where("doctor_id", auth()->id())
+                                       ->paginate($rpwp);
+        } elseif ($role == 'patient') {
+            $appointments = Appointment::whereIn('status', $status)
+                                       ->where('patient_id', auth()->id())
+                                       ->paginate($rpwp);
+        }
+    } else {
+        if ($role == 'admin') {
+            $appointments = Appointment::where('status', $status)
+                                       ->paginate($rpwp);
+        } elseif ($role == 'doctor') {
+            $appointments = Appointment::where('status', $status)
+                                       ->where("doctor_id", auth()->id())
+                                       ->paginate($rpwp);
+        } elseif ($role == 'patient') {
+            $appointments = Appointment::where('status', $status)
+                                       ->where('patient_id', auth()->id())
+                                       ->paginate($rpwp);
+        }
+    }
+    $page = $page ? "page=$page" : "";
+    return view("appointments.tables.$view", compact('appointments', 'role', 'page'));
+  }
+
+  public function index(Request $request)
+  {
+    $page = $request->input('page');
+    return $this->getData('Confirmada', 'confirmed', $page);
+  }
+
+  public function indexPending(Request $request)
+  {
+    $page = $request->input('page');
+    return $this->getData('Reservada', 'pending', $page);
+  }
+
+  public function indexLog(Request $request)
+  {
+    $page = $request->input('page');
+    return $this->getData(['Atendida', 'Cancelada'], 'log', $page);
+  }
+
+  private function setRequest($request)
+  {
+    $page    = $request->input('page');
+    $tabName = $request->input('tabName');
+    $tabName = $tabName ? "/$tabName" : "";
+    if ($page) $tabName = "$tabName?page=$page";
+    return $tabName;
+  }
+
+  public function show(Appointment $appointment, Request $request)
+  {
+    $tabName = $this->setRequest($request);
+    $role = auth()->user()->role;
+    return view('appointments.show', compact('appointment', 'role', 'tabName'));
   }
 
   public function create(ScheduleServiceInterface $scheduleService)
@@ -90,7 +112,6 @@ class AppointmentController extends Controller
 
   public function store(Request $request, ScheduleServiceInterface $scheduleService)
   {
-    // dd($request);
     $rules = [
       'description' => 'required',
        'specialty_id' => 'required|exists:specialties,id',
@@ -139,10 +160,9 @@ class AppointmentController extends Controller
     // right time format
     $carbonTime = Carbon::createFromFormat('g:i A', $data['schedule_time'] );
     $data['schedule_time'] = $carbonTime->format('H:i:s');
-    // dd($data);
     Appointment::create($data);
     $notification = 'La cita se ha registrado correctamente';
-    return back()->with(compact('notification'));
+    // return back()->with(compact('notification'));
     return redirect('/appointments')->with(compact('notification'));
     // return redirect('/appointments', compact('notification'));
     // return redirect('/appointments');
@@ -152,8 +172,9 @@ class AppointmentController extends Controller
   {
     if ($request->has('justification') ) {
         $cancellation = new AppointmentCancellation();
-        $cancellation->justification = $request->input('justification');
-        $cancellation->canceled_by   = auth()->id();
+        $cancellation->justification  = $request->input('justification');
+        // $cancellation->canceled_by   = auth()->id(); // ???
+        $cancellation->canceled_by_id = auth()->id();
         // $cancellation->appointment_id = $appointment->id;
         // $cancellation->save();
         $appointment->cancellation()->save($cancellation);
@@ -161,20 +182,24 @@ class AppointmentController extends Controller
     $appointment->status = 'Cancelada';
     $appointment->save();  // update
     // $notification = '¡La cita se ha cancelado correctamente!';
-    $notification = '¡La cita de '. $appointment->patient->name . 
-                    ' para el '. $appointment->schedule_date .
-                    ' a las '  . (new Carbon($appointment->schedule_time))->format('g:i A').
-                    ' se ha cancelado correctamente!';
+    // $notification = '¡La cita de '. $appointment->patient->name . 
+    //                 ' para el '. $appointment->schedule_date .
+    //                 ' a las ' . (new Carbon($appointment->schedule_time))->format('g:i A').
+    //                 ' se ha cancelado correctamente!';
+    $notification = '¡Cita para el '. $appointment->schedule_date .
+                    ' a las ' . $appointment->scheduled_time_12.
+                    ' cancelada correctamente!';
     return redirect('/appointments')->with(compact('notification'));
   }
 
-  public function cancelFormShow(Appointment $appointment)
+  public function cancelFormShow(Appointment $appointment, Request $request)
   {
+    $tabName = $this->setRequest($request);
     if ($appointment->status == 'Confirmada' || $appointment->status == 'Reservada') {
         $role = auth()->user()->role;
-        return view('appointments.cancel', compact('appointment', 'role'));
+        return view('appointments.cancel', compact('appointment', 'role', 'tabName'));
     }
-    return redirect('/appointments');
+    return redirect("/appointments$tabName");
   }
 
   public function confirm(Appointment $appointment)

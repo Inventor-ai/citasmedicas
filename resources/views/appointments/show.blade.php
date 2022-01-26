@@ -1,9 +1,7 @@
 @extends('layouts.list')
 <?php
   $mainTitle = "Cita # $appointment->id";
-  // $mainItem  = '';
   $mainRoute = 'appointments';
-  $mainData  = $appointment;
 ?>
 @section('title', "$mainTitle")
 
@@ -13,7 +11,7 @@
       <strong>Fecha:</strong> {{ $appointment->schedule_date }}
     </li>
     <li>
-      <strong>Hora:</strong> {{ $appointment->schedule_time }}
+      <strong>Hora:</strong> {{ $appointment->scheduled_time_12 }}
     </li>
     @if ($role == 'admin' || $role == 'patient')
       <li>
@@ -78,5 +76,7 @@
             </ul>
     </div>
   @endif
-  <a href="{{ url('/appointments') }}" class="btn btn-default btn-sm">Volver</a>
+  {{-- <a href="{{ url('/appointments'.$tabName) }}" class="btn btn-default btn-sm">Volver</a> --}}
+  {{-- <a href="{{ url('/'.$mainRoute.$tabName) }}" class="btn btn-default btn-sm">Volver</a> --}}
+  <a href="{{ url("/$mainRoute$tabName") }}" class="btn btn-default btn-sm">Volver</a>
 @endsection
