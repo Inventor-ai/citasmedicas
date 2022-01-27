@@ -64,29 +64,47 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="identity_card">Hora de atención</label>
+        <label for="interval">Hora de atención</label>
         <div id="hours">
           @if ($intervals)
-            @foreach ($intervals['morning'] as $key => $interval)
-               <div class="custom-control custom-radio mb-3">
-                <input type="radio" class="custom-control-input"
-                   id="intervalMorning{{ $key }}" name="schedule_time" 
-                value="{{ $interval['start'] }}" required>
-                <label class="custom-control-label" for="intervalMorning{{ $key }}">
-                  {{ $interval['start'] }} - {{ $interval['end'] }}
-                </label>
+            <div class="text-center">
+              {{-- <div class="row">
+                <div class="col"><span>Horario AM</span></div>
+                <div class="col"><span>Horario PM</span></div>
+              </div> --}}
+              <div class="row">
+                {{-- @if ($intervals['morning']) --}}
+                <div class="col">
+                  <div class="mb-3">Horario AM</div>
+                  @foreach ($intervals['morning'] as $key => $interval)
+                    <div class="custom-control custom-radio mb-3">
+                      <input type="radio" class="custom-control-input"
+                        id="intervalMorning{{ $key }}" name="schedule_time" 
+                      value="{{ $interval['start'] }}" required>
+                      <label class="custom-control-label" for="intervalMorning{{ $key }}">
+                        {{ $interval['start'] }} - {{ $interval['end'] }}
+                      </label>
+                    </div>
+                  @endforeach
+                </div>
+                {{-- @endif
+                @if ($intervals['afternoon']) --}}
+                <div class="col">
+                  <div class="mb-3">Horario PM</div>
+                  @foreach ($intervals['afternoon'] as $key => $interval)
+                    <div class="custom-control custom-radio mb-3">
+                      <input type="radio" class="custom-control-input"
+                        id="intervalAfternoon{{ $key }}" name="schedule_time" 
+                      value="{{ $interval['start'] }}" required>
+                      <label class="custom-control-label" for="intervalAfternoon{{ $key }}">
+                        {{ $interval['start'] }} - {{ $interval['end'] }}
+                      </label>
+                    </div>
+                  @endforeach
+                </div>
+                {{-- @endif --}}
               </div>
-            @endforeach
-            @foreach ($intervals['afternoon'] as $key => $interval)
-               <div class="custom-control custom-radio mb-3">
-                <input type="radio" class="custom-control-input"
-                   id="intervalAfternoon{{ $key }}" name="schedule_time" 
-                value="{{ $interval['start'] }}" required>
-                <label class="custom-control-label" for="intervalAfternoon{{ $key }}">
-                  {{ $interval['start'] }} - {{ $interval['end'] }}
-                </label>
-              </div>
-            @endforeach
+            </div>
           @else
             <div class="alert alert-info" role="alert">
               Seleccionar un médico y una fecha para ver sus horas disponibles.

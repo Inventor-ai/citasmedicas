@@ -58,4 +58,17 @@ class User extends Authenticatable
     {
       return $this->belongsToMany(Specialty::class)->withTimeStamps();
     }
+
+    // $user->appointmentsAsDoctor  ->attendedAppointments  =  $user->asDoctorAppointments
+    public function asDoctorAppointments()
+    {
+      return $this->hasMany(Appointment::class, 'doctor_id');
+    }
+
+    // $user->appointmentsAsPatient ->requestedAppointments =  $user->asPatientAppointments
+    public function asPatientAppointments()
+    {
+      return $this->hasMany(Appointment::class, 'patient_id');
+    }
+
 }

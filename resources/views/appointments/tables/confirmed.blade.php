@@ -22,10 +22,6 @@
                     @include('appointments.tables.buttonShow')
                 @endif
                 @include('appointments.tables.buttonCancel')
-                {{-- <a class="btn btn-sm btn-danger" data-toggle="tooltip" title="Cancelar {{$mainItem}}"
-                    href="{{url('/appointments/'.$appointment->id.'/cancel')}}">
-                  Cancelar
-                </a> --}}
               </td>
             </tr>
             @endforeach

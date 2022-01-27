@@ -17,35 +17,63 @@ class AppointmentController extends Controller
     return 5; // Setting from DB
   }
 
-  private function getData($status = 'Confirmada', $view = 'confirmed', $page = null)
+  private function getData_Ok($status = 'Confirmada', $view = 'confirmed', $page = null)
   {
     $role = auth()->user()->role;
-    $rpwp = $this->getPageSize(); // Records Per Web Page = rpwp
+    $rPag = $this->getPageSize(); // Records per Page = rPag
     if ($view == 'log') {
         if ($role == 'admin') {
             $appointments = Appointment::whereIn('status', $status)
-                                       ->paginate($rpwp);
+                                       ->paginate($rPag);
         } elseif ($role == 'doctor') {
             $appointments = Appointment::whereIn('status', $status)
                                        ->where("doctor_id", auth()->id())
-                                       ->paginate($rpwp);
+                                       ->paginate($rPag);
         } elseif ($role == 'patient') {
             $appointments = Appointment::whereIn('status', $status)
                                        ->where('patient_id', auth()->id())
-                                       ->paginate($rpwp);
+                                       ->paginate($rPag);
         }
     } else {
         if ($role == 'admin') {
             $appointments = Appointment::where('status', $status)
-                                       ->paginate($rpwp);
+                                       ->paginate($rPag);
         } elseif ($role == 'doctor') {
             $appointments = Appointment::where('status', $status)
                                        ->where("doctor_id", auth()->id())
-                                       ->paginate($rpwp);
+                                       ->paginate($rPag);
         } elseif ($role == 'patient') {
             $appointments = Appointment::where('status', $status)
                                        ->where('patient_id', auth()->id())
-                                       ->paginate($rpwp);
+                                       ->paginate($rPag);
+        }
+    }
+    $page = $page ? "page=$page" : "";
+    return view("appointments.tables.$view", compact('appointments', 'role', 'page'));
+  }
+  
+  private function getData($status = 'Confirmada', $view = 'confirmed', $page = null)
+  {
+    $role = auth()->user()->role;
+    $rPag = $this->getPageSize(); // Records per Page = rPag
+    // if ($view == 'log') {
+    if (is_array($status)) {
+        if ($role == 'admin') {
+            $appointments = Appointment::whereIn ('status', $status)
+                                       ->paginate($rPag);
+        } else {
+            $appointments = Appointment::whereIn ('status', $status)
+                                       ->where   ($role.'_id', auth()->id())
+                                       ->paginate($rPag);
+        }
+    } else {
+        if ($role == 'admin') {
+            $appointments = Appointment::where  ('status', $status)
+                                       ->paginate($rPag);
+        } else {
+            $appointments = Appointment::where   ('status', $status)
+                                       ->where   ($role.'_id', auth()->id())
+                                       ->paginate($rPag);
         }
     }
     $page = $page ? "page=$page" : "";
@@ -65,7 +93,7 @@ class AppointmentController extends Controller
   }
 
   public function indexLog(Request $request)
-  {
+  {//dd($request);
     $page = $request->input('page');
     return $this->getData(['Atendida', 'Cancelada'], 'log', $page);
   }
@@ -211,6 +239,5 @@ class AppointmentController extends Controller
                     ' a las '  . (new Carbon($appointment->schedule_time))->format('g:i A').
                     ' se ha confirmado correctamente!';
     return redirect('/appointments')->with(compact('notification'));
-  }
-  
+  }  
 }

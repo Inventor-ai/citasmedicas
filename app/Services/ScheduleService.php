@@ -12,6 +12,7 @@ class ScheduleService implements ScheduleServiceInterface
      $exist = Appointment::where('doctor_id', $doctorId)
                          ->where('schedule_date', $date)
                          ->where('schedule_time', $time->format('H:i:s'))
+                         ->Where('status', '!=', 'Cancelada')
                          ->exists();
      return !$exist; // available if already none exists
    }
