@@ -35,14 +35,23 @@ const chart = Highcharts.chart('container', {
                 },
                 series: []
               });
-  
+
 function fetchData() {
   // fetch API
-  fetch('../../charts/doctors/column/data')
+  const startDate = $("#startDate").val();
+  const endDate   = $("#endDate").val();
+  const url       = `../../charts/doctors/column/data?startDate=${startDate}&endDate=${endDate}`;
+  fetch(url)
       .then(function (response) {
          return response.json();
       })
-      .then(function (myJson) {
-         console.log(myJson);
+      .then(function (data) {
+        chart.xAxis[0].setCategories(data.categories);
+        chart.addSeries(data.series[0]);
+        chart.addSeries(data.series[1]);
       });
 }
+
+$(function () {
+    fetchData();
+});
