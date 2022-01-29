@@ -34,24 +34,30 @@ function loadHours() {
 
 function displayHours(data) {
   if (!data.morning && !data.afternoon ) {
-      console.log('No se encontraron horas disponibles para el médico en el día seleccionado');
+      // console.log('No se encontraron horas disponibles para el médico en el día seleccionado');
       $hours.html(noHoursAlert);
       return;
   }
   iRadio = 0;
-  let htmlHours = '';
-  if (data.morning) {
+  let htmlHours = '<div class="text-center"><div class="row">';
+  if (data.morning.length) {
+      htmlHours += '<div class="col"><div class="mb-3">Horario AM</div>';
       const morning_intervals = data.morning;
       morning_intervals.forEach( interval => {
         htmlHours += getRadioIntervalHtml(interval);
       })
+      htmlHours += '</div>';
   }
-  if (data.afternoon) {
+  if (data.afternoon.length) {
+      htmlHours += '<div class="col"><div class="mb-3">Horario PM</div>';
       const afternoon_intervals = data.afternoon;
       afternoon_intervals.forEach( interval => {
         htmlHours += getRadioIntervalHtml(interval);
       })
+      htmlHours += '</div>';
   }
+  htmlHours += '</div></div>';
+
   $hours.html(htmlHours);
 }
 

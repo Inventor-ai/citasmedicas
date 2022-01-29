@@ -14,6 +14,9 @@
 @endsection 
 
 @section('tableData')
+<div class="card-body">
+   {{ $mainData->links() }}
+</div>
 <div class="table-responsive">
   <table class="table align-items-center table-flush">
     <thead class="thead-light">
@@ -48,8 +51,5 @@
       @endforeach
     </tbody>
   </table>
-</div>
-<div class="card-body">
-   {{ $mainData->links() }}
 </div>
 @endsection

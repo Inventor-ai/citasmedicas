@@ -73,36 +73,36 @@
                 <div class="col"><span>Horario PM</span></div>
               </div> --}}
               <div class="row">
-                {{-- @if ($intervals['morning']) --}}
-                <div class="col">
-                  <div class="mb-3">Horario AM</div>
-                  @foreach ($intervals['morning'] as $key => $interval)
-                    <div class="custom-control custom-radio mb-3">
-                      <input type="radio" class="custom-control-input"
-                        id="intervalMorning{{ $key }}" name="schedule_time" 
-                      value="{{ $interval['start'] }}" required>
-                      <label class="custom-control-label" for="intervalMorning{{ $key }}">
-                        {{ $interval['start'] }} - {{ $interval['end'] }}
-                      </label>
-                    </div>
-                  @endforeach
-                </div>
-                {{-- @endif
-                @if ($intervals['afternoon']) --}}
-                <div class="col">
-                  <div class="mb-3">Horario PM</div>
-                  @foreach ($intervals['afternoon'] as $key => $interval)
-                    <div class="custom-control custom-radio mb-3">
-                      <input type="radio" class="custom-control-input"
-                        id="intervalAfternoon{{ $key }}" name="schedule_time" 
-                      value="{{ $interval['start'] }}" required>
-                      <label class="custom-control-label" for="intervalAfternoon{{ $key }}">
-                        {{ $interval['start'] }} - {{ $interval['end'] }}
-                      </label>
-                    </div>
-                  @endforeach
-                </div>
-                {{-- @endif --}}
+                @if ($intervals['morning'])
+                  <div class="col">
+                    <div class="mb-3">Horario AM</div>
+                    @foreach ($intervals['morning'] as $key => $interval)
+                      <div class="custom-control custom-radio mb-3">
+                        <input type="radio" class="custom-control-input"
+                          id="intervalMorning{{ $key }}" name="schedule_time" 
+                        value="{{ $interval['start'] }}" required>
+                        <label class="custom-control-label" for="intervalMorning{{ $key }}">
+                          {{ $interval['start'] }} - {{ $interval['end'] }}
+                        </label>
+                      </div>
+                    @endforeach
+                  </div>
+                @endif
+                @if ($intervals['afternoon'])
+                  <div class="col">
+                    <div class="mb-3">Horario PM+</div>
+                    @foreach ($intervals['afternoon'] as $key => $interval)
+                      <div class="custom-control custom-radio mb-3">
+                        <input type="radio" class="custom-control-input"
+                          id="intervalAfternoon{{ $key }}" name="schedule_time" 
+                        value="{{ $interval['start'] }}" required>
+                        <label class="custom-control-label" for="intervalAfternoon{{ $key }}">
+                          {{ $interval['start'] }} - {{ $interval['end'] }}
+                        </label>
+                      </div>
+                    @endforeach
+                  </div>
+                @endif
               </div>
             </div>
           @else

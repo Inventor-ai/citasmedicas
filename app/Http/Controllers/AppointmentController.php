@@ -93,7 +93,7 @@ class AppointmentController extends Controller
   }
 
   public function indexLog(Request $request)
-  {//dd($request);
+  {
     $page = $request->input('page');
     return $this->getData(['Atendida', 'Cancelada'], 'log', $page);
   }
@@ -193,7 +193,6 @@ class AppointmentController extends Controller
     // return back()->with(compact('notification'));
     return redirect('/appointments')->with(compact('notification'));
     // return redirect('/appointments', compact('notification'));
-    // return redirect('/appointments');
   }
 
   public function cancelExecute(Appointment $appointment, Request $request)

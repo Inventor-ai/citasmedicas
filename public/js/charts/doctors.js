@@ -36,22 +36,32 @@ const chart = Highcharts.chart('container', {
                 series: []
               });
 
+let $start, $end;
+
 function fetchData() {
+  const dateStart = $start.val();
+  const dateEnd   = $end.val();
+  const url       = '../../charts/doctors/column/data'
+                  + `?startDate=${dateStart}`
+                  + `&endDate=${dateEnd}`;
   // fetch API
-  const startDate = $("#startDate").val();
-  const endDate   = $("#endDate").val();
-  const url       = `../../charts/doctors/column/data?startDate=${startDate}&endDate=${endDate}`;
-  fetch(url)
-      .then(function (response) {
-         return response.json();
-      })
-      .then(function (data) {
-        chart.xAxis[0].setCategories(data.categories);
-        chart.addSeries(data.series[0]);
-        chart.addSeries(data.series[1]);
-      });
+  fetch(url).then( response => 
+    response.json()
+  ).then( data => {
+    chart.xAxis[0].setCategories(data.categories);
+    if (chart.series.length > 0 ) {
+        chart.series[0].remove();
+        chart.series[0].remove();
+    }
+    chart.addSeries(data.series[0]);
+    chart.addSeries(data.series[1]);
+  });
 }
 
 $(function () {
+    $start = $("#dateStart");
+    $end = $("#dateEnd");
     fetchData();
+    $start.on("change", fetchData);
+    $end.on("change", fetchData);
 });

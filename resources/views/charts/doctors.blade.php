@@ -20,7 +20,7 @@
               <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
             </div>
             <input class="form-control" placeholder="Fecha inicial" type="text" 
-               id="startDate" name="schedule_date" value="{{ $start }}">
+               id="dateStart" name="schedule_date" value="{{ $start }}">
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
                 <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
             </div>
             <input class="form-control" placeholder="Fecha final" type="text" 
-               id="endDate" name="schedule_date" value="{{ $end }}">
+               id="dateEnd" name="schedule_date" value="{{ $end }}">
           </div>
         </div>
       </div>

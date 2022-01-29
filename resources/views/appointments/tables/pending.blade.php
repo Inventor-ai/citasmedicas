@@ -12,6 +12,9 @@
 @section('tableData')
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="pending-appointments" role="tabpanel" aria-labelledby="pxills-profile-tab">
+      <div class="card-body">
+         {{ $mainData->links() }}
+      </div>
       <div class="table-responsive">
         <table class="table align-items-center table-flush">
           @include('appointments.tables.thead')
@@ -45,9 +48,6 @@
             @endforeach
           </tbody>
         </table>
-      </div>
-      <div class="card-body">
-         {{ $mainData->links() }}
       </div>
     </div>
 @endsection

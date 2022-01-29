@@ -76,7 +76,5 @@
             </ul>
     </div>
   @endif
-  {{-- <a href="{{ url('/appointments'.$tabName) }}" class="btn btn-default btn-sm">Volver</a> --}}
-  {{-- <a href="{{ url('/'.$mainRoute.$tabName) }}" class="btn btn-default btn-sm">Volver</a> --}}
   <a href="{{ url("/$mainRoute$tabName") }}" class="btn btn-default btn-sm">Volver</a>
 @endsection

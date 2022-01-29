@@ -14,9 +14,10 @@ class ChartController extends Controller
   public function appointments()
   {
     $monthlyCounts = Appointment::select(
-                        DB::raw('MONTH(created_at) as month'), 
-                        DB::raw('COUNT(0) as count')
-                     )->groupBy('month')->get()->toArray();
+                        // DB::raw('MONTH(created_at) as month'), 
+                        DB::raw('MONTH(schedule_date) as month'), 
+                        DB::raw('COUNT(1) as count')
+    )->groupBy('month')->get()->toArray();
     $counts = array_fill(0, 12, 0 );  // start_index, num, value / index, Qty, value
     foreach ($monthlyCounts as $monthlyCount) {
       $counts[$monthlyCount['month']-1] = $monthlyCount['count'];
@@ -37,18 +38,18 @@ class ChartController extends Controller
     $startDate = $request->input('startDate');
     $endDate  = $request->input('endDate');
     $doctors = User::doctors()
-                   ->select('name')
-                   ->withCount([
-                       'attendedAppointments' => function($query) use ($startDate, $endDate) {
-                          $query->whereBetween('schedule_date', [$startDate, $endDate]);
-                       },
-                       'canceledAppointments' => function($query) use ($startDate, $endDate) {
-                          $query->whereBetween('schedule_date', [$startDate, $endDate]);
-                       }
-                     ])
-                   ->orderBy('attended_appointments_count', 'desc')
-                   ->take(5)
-                   ->get();
+             ->select('name')
+             ->withCount([
+                 'attendedAppointments' => function($query) use ($startDate, $endDate) {
+                     $query->whereBetween('schedule_date', [$startDate, $endDate]);
+                 },
+                 'canceledAppointments' => function($query) use ($startDate, $endDate) {
+                     $query->whereBetween('schedule_date', [$startDate, $endDate]);
+                 }
+                 ])
+             ->orderBy('attended_appointments_count', 'desc')
+             ->take(5)
+             ->get();
     $data = [];
     $data['categories'] = $doctors->pluck('name');
     $series               = [];

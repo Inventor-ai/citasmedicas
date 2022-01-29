@@ -61,11 +61,6 @@ class ScheduleService implements ScheduleServiceInterface
      while ($start < $end) {
        $interval = [];
        $interval['start'] = $start->format('g:i A');
-       // $exists = Appointment::where('doctor_id', $doctorId)
-       //                      ->where('schedule_date', $date)
-       //                      ->where('schedule_time', $start->format('H:i:s'))
-       //                      ->exists();
-       // $exists = isAvailableInterval($doctorId, $date, $start->format('H:i:s'));
        $available = $this->isAvailableInterval($doctorId, $date, $start);
        $start->addMinutes(30);        
        $interval['end']   = $start->format('g:i A');
